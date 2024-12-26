@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const LoginInfo = require('../models/loginInfo');
 
 class LoginInfoController {
@@ -44,6 +45,18 @@ class LoginInfoController {
             res.status(200).json({ message: 'LoginInfo deleted' });
         } else {
             res.status(404).json({ message: 'LoginInfo not found' });
+        }
+    }
+
+    async login(req, res) {
+        const { email, password } = req.body;
+        const loginInfo = await LoginInfo.findOne({ email }).populate('userRoleId');
+
+        if (loginInfo && await loginInfo.comparePassword(password)) {
+            const token = jwt.sign({ id: loginInfo._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token });
+        } else {
+            res.status(401).json({ message: 'Invalid email or password' });
         }
     }
 }

@@ -1,5 +1,6 @@
 const RoleController = require('../controllers/roleController');
 const LoginInfoController = require('../controllers/loginInfoController');
+const authenticateJWT = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -8,6 +9,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *     description: Role management
  *   - name: LoginInfos
  *     description: Login information management
+ *   - name: Authentication
+ *     description: User authentication
  */
 
 /**
@@ -16,6 +19,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   get:
  *     summary: Retrieve a list of roles
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of roles
@@ -38,6 +43,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   get:
  *     summary: Retrieve a single role by ID
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -67,6 +74,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   post:
  *     summary: Create a new role
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -96,6 +105,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   put:
  *     summary: Update a role by ID
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -134,6 +145,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   delete:
  *     summary: Delete a role by ID
  *     tags: [Roles]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -154,6 +167,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   get:
  *     summary: Retrieve a list of login information
  *     tags: [LoginInfos]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of login information
@@ -180,6 +195,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   get:
  *     summary: Retrieve a single login information by ID
  *     tags: [LoginInfos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -252,6 +269,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   put:
  *     summary: Update a login information by ID
  *     tags: [LoginInfos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -300,6 +319,8 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *   delete:
  *     summary: Delete a login information by ID
  *     tags: [LoginInfos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -314,20 +335,54 @@ const LoginInfoController = require('../controllers/loginInfoController');
  *         description: Login information not found
  */
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: User login
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Invalid email or password
+ */
+
 function setRoutes(app) {
     const roleController = new RoleController();
-    app.get('/roles', roleController.getRoles.bind(roleController));
-    app.get('/roles/:id', roleController.getRoleById.bind(roleController));
-    app.post('/roles', roleController.createRole.bind(roleController));
-    app.put('/roles/:id', roleController.updateRole.bind(roleController));
-    app.delete('/roles/:id', roleController.deleteRole.bind(roleController));
+    app.get('/roles', authenticateJWT, roleController.getRoles.bind(roleController));
+    app.get('/roles/:id', authenticateJWT, roleController.getRoleById.bind(roleController));
+    app.post('/roles', authenticateJWT, roleController.createRole.bind(roleController));
+    app.put('/roles/:id', authenticateJWT, roleController.updateRole.bind(roleController));
+    app.delete('/roles/:id', authenticateJWT, roleController.deleteRole.bind(roleController));
 
     const loginInfoController = new LoginInfoController();
-    app.get('/loginInfos', loginInfoController.getLoginInfos.bind(loginInfoController));
-    app.get('/loginInfos/:id', loginInfoController.getLoginInfoById.bind(loginInfoController));
-    app.post('/loginInfos', loginInfoController.createLoginInfo.bind(loginInfoController));
-    app.put('/loginInfos/:id', loginInfoController.updateLoginInfo.bind(loginInfoController));
-    app.delete('/loginInfos/:id', loginInfoController.deleteLoginInfo.bind(loginInfoController));
+    app.get('/loginInfos', authenticateJWT, loginInfoController.getLoginInfos.bind(loginInfoController));
+    app.get('/loginInfos/:id', authenticateJWT, loginInfoController.getLoginInfoById.bind(loginInfoController));
+    app.post('/loginInfos', authenticateJWT, loginInfoController.createLoginInfo.bind(loginInfoController));
+    app.put('/loginInfos/:id', authenticateJWT, loginInfoController.updateLoginInfo.bind(loginInfoController));
+    app.delete('/loginInfos/:id', authenticateJWT, loginInfoController.deleteLoginInfo.bind(loginInfoController));
+
+    // Public routes
+    app.post('/login', loginInfoController.login.bind(loginInfoController));
 }
 
 module.exports = setRoutes;
