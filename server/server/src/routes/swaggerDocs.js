@@ -199,6 +199,8 @@
  *                     type: string
  *                   status:
  *                     type: string
+ *                   profileImg:
+ *                     type: string
  */
 
 /**
@@ -242,6 +244,8 @@
  *                   type: string
  *                 status:
  *                   type: string
+ *                 profileImg:
+ *                   type: string
  *       404:
  *         description: User not found
  */
@@ -257,7 +261,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -277,6 +281,9 @@
  *                 type: string
  *               status:
  *                 type: string
+ *               profileImg:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: The created user
@@ -303,6 +310,8 @@
  *                   type: string
  *                 status:
  *                   type: string
+ *                 profileImg:
+ *                   type: string
  */
 
 /**
@@ -323,7 +332,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -343,6 +352,9 @@
  *                 type: string
  *               status:
  *                 type: string
+ *               profileImg:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: The updated user
@@ -369,6 +381,8 @@
  *                   type: string
  *                 status:
  *                   type: string
+ *                 profileImg:
+ *                   type: string
  *       404:
  *         description: User not found
  */
@@ -394,6 +408,7 @@
  *       404:
  *         description: User not found
  */
+
 
 /**
  * @swagger

@@ -1,4 +1,18 @@
 const User = require('../models/user');
+const multer = require('multer');
+const path = require('path');
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage });
 
 class UserController {
     async getUsers(req, res) {
@@ -17,7 +31,10 @@ class UserController {
 
     async createUser(req, res) {
         try {
-            const newUser = new User(req.body);
+            const newUser = new User({
+                ...req.body,
+                profileImg: req.file ? req.file.path : null
+            });
             await newUser.save();
             res.status(201).json(newUser);
         } catch (error) {
@@ -26,7 +43,11 @@ class UserController {
     }
 
     async updateUser(req, res) {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedData = {
+            ...req.body,
+            profileImg: req.file ? req.file.path : req.body.profileImg
+        };
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
         if (updatedUser) {
             res.status(200).json(updatedUser);
         } else {
@@ -44,4 +65,4 @@ class UserController {
     }
 }
 
-module.exports = UserController;
+module.exports = { UserController, upload };

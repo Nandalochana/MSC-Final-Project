@@ -2,7 +2,7 @@ const RoleController = require('../controllers/roleController');
 const LoginInfoController = require('../controllers/loginInfoController');
 const PaymentTypeController = require('../controllers/paymentTypeController');
 const UserPaymentTypeController = require('../controllers/userPaymentTypeController');
-const UserController = require('../controllers/userController');
+const { UserController, upload } = require('../controllers/userController');
 const authenticateJWT = require('../middleware/authMiddleware');
 
 function setRoutes(app) {
@@ -37,8 +37,8 @@ function setRoutes(app) {
     const userController = new UserController();
     app.get('/users', authenticateJWT, userController.getUsers.bind(userController));
     app.get('/users/:id', authenticateJWT, userController.getUserById.bind(userController));
-    app.post('/users', authenticateJWT, userController.createUser.bind(userController));
-    app.put('/users/:id', authenticateJWT, userController.updateUser.bind(userController));
+    app.post('/users', authenticateJWT, upload.single('profileImg'), userController.createUser.bind(userController));
+    app.put('/users/:id', authenticateJWT, upload.single('profileImg'), userController.updateUser.bind(userController));
     app.delete('/users/:id', authenticateJWT, userController.deleteUser.bind(userController));
 
     // Public routes
