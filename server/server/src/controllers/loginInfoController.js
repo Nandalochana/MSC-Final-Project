@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 const LoginInfo = require('../models/loginInfo');
 
 class LoginInfoController {
-    async getLoginInfos(req, res) {
-        const loginInfos = await LoginInfo.find().populate('userRoleId');
-        res.status(200).json(loginInfos);
+    async getloginInfo(req, res) {
+        const loginInfo = await LoginInfo.find().populate('userRoleId');
+        res.status(200).json(loginInfo);
     }
 
     async getLoginInfoById(req, res) {
