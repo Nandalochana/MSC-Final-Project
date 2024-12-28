@@ -2,11 +2,15 @@ const RoleController = require('../controllers/roleController');
 const LoginInfoController = require('../controllers/loginInfoController');
 const PaymentTypeController = require('../controllers/paymentTypeController');
 const UserPaymentTypeController = require('../controllers/userPaymentTypeController');
-const { UserController, upload } = require('../controllers/userController');
+const { UserController, upload: userUpload } = require('../controllers/userController');
 const ProfileController = require('../controllers/profileController');
 const UserProfileController = require('../controllers/userProfileController');
 const TaskController = require('../controllers/taskController');
 const TaskProfileController = require('../controllers/taskProfileController');
+const UserLocationInfoController = require('../controllers/userLocationInfoController');
+const TaskLocationInfoController = require('../controllers/taskLocationInfoController');
+const { AttachmentController, upload: attachmentUpload } = require('../controllers/attachmentController');
+const CommentController = require('../controllers/commentController');
 const authenticateJWT = require('../middleware/authMiddleware');
 
 function setRoutes(app) {
@@ -41,8 +45,8 @@ function setRoutes(app) {
     const userController = new UserController();
     app.get('/users', authenticateJWT, userController.getUsers.bind(userController));
     app.get('/users/:id', authenticateJWT, userController.getUserById.bind(userController));
-    app.post('/users', authenticateJWT, upload.single('profileImg'), userController.createUser.bind(userController));
-    app.put('/users/:id', authenticateJWT, upload.single('profileImg'), userController.updateUser.bind(userController));
+    app.post('/users', authenticateJWT, userUpload.single('profileImg'), userController.createUser.bind(userController));
+    app.put('/users/:id', authenticateJWT, userUpload.single('profileImg'), userController.updateUser.bind(userController));
     app.delete('/users/:id', authenticateJWT, userController.deleteUser.bind(userController));
 
     const profileController = new ProfileController();
@@ -73,6 +77,34 @@ function setRoutes(app) {
     app.put('/taskProfiles/:id', authenticateJWT, taskProfileController.updateTaskProfile.bind(taskProfileController));
     app.delete('/taskProfiles/:id', authenticateJWT, taskProfileController.deleteTaskProfile.bind(taskProfileController));
     app.get('/taskProfiles/task/:taskId', authenticateJWT, taskProfileController.getProfilesByTaskId.bind(taskProfileController));
+
+    const userLocationInfoController = new UserLocationInfoController();
+    app.get('/userLocationInfo', authenticateJWT, userLocationInfoController.getUserLocationInfo.bind(userLocationInfoController));
+    app.get('/userLocationInfo/:id', authenticateJWT, userLocationInfoController.getUserLocationInfoById.bind(userLocationInfoController));
+    app.post('/userLocationInfo', authenticateJWT, userLocationInfoController.createUserLocationInfo.bind(userLocationInfoController));
+    app.put('/userLocationInfo/:id', authenticateJWT, userLocationInfoController.updateUserLocationInfo.bind(userLocationInfoController));
+    app.delete('/userLocationInfo/:id', authenticateJWT, userLocationInfoController.deleteUserLocationInfo.bind(userLocationInfoController));
+
+    const taskLocationInfoController = new TaskLocationInfoController();
+    app.get('/taskLocationInfo', authenticateJWT, taskLocationInfoController.getTaskLocationInfo.bind(taskLocationInfoController));
+    app.get('/taskLocationInfo/:id', authenticateJWT, taskLocationInfoController.getTaskLocationInfoById.bind(taskLocationInfoController));
+    app.post('/taskLocationInfo', authenticateJWT, taskLocationInfoController.createTaskLocationInfo.bind(taskLocationInfoController));
+    app.put('/taskLocationInfo/:id', authenticateJWT, taskLocationInfoController.updateTaskLocationInfo.bind(taskLocationInfoController));
+    app.delete('/taskLocationInfo/:id', authenticateJWT, taskLocationInfoController.deleteTaskLocationInfo.bind(taskLocationInfoController));
+
+    const attachmentController = new AttachmentController();
+    app.get('/attachments', authenticateJWT, attachmentController.getAttachments.bind(attachmentController));
+    app.get('/attachments/:id', authenticateJWT, attachmentController.getAttachmentById.bind(attachmentController));
+    app.post('/attachments', authenticateJWT, attachmentUpload.single('file'), attachmentController.createAttachment.bind(attachmentController));
+    app.put('/attachments/:id', authenticateJWT, attachmentController.updateAttachment.bind(attachmentController));
+    app.delete('/attachments/:id', authenticateJWT, attachmentController.deleteAttachment.bind(attachmentController));
+
+    const commentController = new CommentController();
+    app.get('/comments', authenticateJWT, commentController.getComments.bind(commentController));
+    app.get('/comments/:id', authenticateJWT, commentController.getCommentById.bind(commentController));
+    app.post('/comments', authenticateJWT, commentController.createComment.bind(commentController));
+    app.put('/comments/:id', authenticateJWT, commentController.updateComment.bind(commentController));
+    app.delete('/comments/:id', authenticateJWT, commentController.deleteComment.bind(commentController));
 
     // Public routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));

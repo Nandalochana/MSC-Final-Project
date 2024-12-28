@@ -19,6 +19,14 @@
  *     description: Task management
  *   - name: TaskProfiles
  *     description: Task profile management
+ *   - name: UserLocationInfo
+ *     description: User location information management
+ *   - name: TaskLocationInfo
+ *     description: Task location information management
+ *   - name: Attachments
+ *     description: Attachment management
+ *   - name: Comments
+ *     description: Comment management
  *   - name: Authentication
  *     description: User authentication
  */
@@ -1649,6 +1657,719 @@
  *                     type: string
  *                   status:
  *                     type: string
+ */
+
+/**
+ * @swagger
+ * /UserLocationInfo:
+ *   get:
+ *     summary: Retrieve a list of user location infos
+ *     tags: [UserLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of user location infos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   latitude:
+ *                     type: number
+ *                   longitude:
+ *                     type: number
+ *                   userId:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /UserLocationInfo/{id}:
+ *   get:
+ *     summary: Retrieve a single user location info by ID
+ *     tags: [UserLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user location info ID
+ *     responses:
+ *       200:
+ *         description: A single user location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 userId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: User location info not found
+ */
+
+/**
+ * @swagger
+ * /UserLocationInfo:
+ *   post:
+ *     summary: Create a new user location info
+ *     tags: [UserLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *               userId:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created user location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 userId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /UserLocationInfo/{id}:
+ *   put:
+ *     summary: Update a user location info by ID
+ *     tags: [UserLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user location info ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *               userId:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated user location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 userId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: User location info not found
+ */
+
+/**
+ * @swagger
+ * /UserLocationInfo/{id}:
+ *   delete:
+ *     summary: Delete a user location info by ID
+ *     tags: [UserLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user location info ID
+ *     responses:
+ *       200:
+ *         description: User location info deleted
+ *       404:
+ *         description: User location info not found
+ */
+
+/**
+ * @swagger
+ * /TaskLocationInfo:
+ *   get:
+ *     summary: Retrieve a list of task location infos
+ *     tags: [TaskLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of task location infos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   latitude:
+ *                     type: number
+ *                   longitude:
+ *                     type: number
+ *                   taskId:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /TaskLocationInfo/{id}:
+ *   get:
+ *     summary: Retrieve a single task location info by ID
+ *     tags: [TaskLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task location info ID
+ *     responses:
+ *       200:
+ *         description: A single task location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 taskId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task location info not found
+ */
+
+/**
+ * @swagger
+ * /TaskLocationInfo:
+ *   post:
+ *     summary: Create a new task location info
+ *     tags: [TaskLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *               taskId:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created task location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 taskId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /TaskLocationInfo/{id}:
+ *   put:
+ *     summary: Update a task location info by ID
+ *     tags: [TaskLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task location info ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *               taskId:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated task location info
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 latitude:
+ *                   type: number
+ *                 longitude:
+ *                   type: number
+ *                 taskId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task location info not found
+ */
+
+/**
+ * @swagger
+ * /TaskLocationInfo/{id}:
+ *   delete:
+ *     summary: Delete a task location info by ID
+ *     tags: [TaskLocationInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task location info ID
+ *     responses:
+ *       200:
+ *         description: Task location info deleted
+ *       404:
+ *         description: Task location info not found
+ */
+
+/**
+ * @swagger
+ * /attachments:
+ *   get:
+ *     summary: Retrieve a list of attachments
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of attachments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /attachments/{id}:
+ *   get:
+ *     summary: Retrieve a single attachment by ID
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The attachment ID
+ *     responses:
+ *       200:
+ *         description: A single attachment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Attachment not found
+ */
+
+/**
+ * @swagger
+ * /attachments:
+ *   post:
+ *     summary: Create a new attachment
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created attachment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /attachments/{id}:
+ *   put:
+ *     summary: Update an attachment by ID
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The attachment ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated attachment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Attachment not found
+ */
+
+/**
+ * @swagger
+ * /attachments/{id}:
+ *   delete:
+ *     summary: Delete an attachment by ID
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The attachment ID
+ *     responses:
+ *       200:
+ *         description: Attachment deleted
+ *       404:
+ *         description: Attachment not found
+ */
+
+/**
+ * @swagger
+ * /comments:
+ *   get:
+ *     summary: Retrieve a list of comments
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of comments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   comment:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /comments/{id}:
+ *   get:
+ *     summary: Retrieve a single comment by ID
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The comment ID
+ *     responses:
+ *       200:
+ *         description: A single comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 comment:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Comment not found
+ */
+
+/**
+ * @swagger
+ * /comments:
+ *   post:
+ *     summary: Create a new comment
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 comment:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /comments/{id}:
+ *   put:
+ *     summary: Update a comment by ID
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The comment ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               comment:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated comment
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 comment:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Comment not found
+ */
+
+/**
+ * @swagger
+ * /comments/{id}:
+ *   delete:
+ *     summary: Delete a comment by ID
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The comment ID
+ *     responses:
+ *       200:
+ *         description: Comment deleted
+ *       404:
+ *         description: Comment not found
  */
 
 /**
