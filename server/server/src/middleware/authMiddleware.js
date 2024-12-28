@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const LoginInfo = require('../models/loginInfo');
 
-const authenticateJWT = (req, res, next) => {
+const authenticateJWT = async (req, res, next) => {
     // Bypass authentication for login and create login info routes
     if (req.path === '/login' || (req.path === '/loginInfos' && req.method === 'POST')) {
         return next();
@@ -19,7 +19,7 @@ const authenticateJWT = (req, res, next) => {
             next();
         });
     } else {
-        res.sendStatus(401);
+        res.sendStatus(401); // Unauthorized
     }
 };
 

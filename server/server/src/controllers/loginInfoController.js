@@ -59,6 +59,16 @@ class LoginInfoController {
             res.status(401).json({ message: 'Invalid email or password' });
         }
     }
+
+    async logout(req, res) {
+        const token = req.header('Authorization')?.split(' ')[1];
+        if (token) {
+            res.setHeader('Authorization', '');
+            res.status(200).json({ message: 'Logged out successfully' });
+        } else {
+            res.status(400).json({ message: 'Token not provided' });
+        }
+    }
 }
 
 module.exports = LoginInfoController;

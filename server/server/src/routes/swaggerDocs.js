@@ -2822,3 +2822,16 @@
  *       401:
  *         description: Invalid email or password
  */
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: User logout
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ */
