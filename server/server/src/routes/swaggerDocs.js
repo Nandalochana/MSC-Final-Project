@@ -11,6 +11,14 @@
  *     description: Payment type management
  *   - name: UserPaymentTypes
  *     description: User payment type management
+ *   - name: UserProfiles
+ *     description: User profile management
+ *   - name: Profiles
+ *     description: Profile management
+ *   - name: Tasks
+ *     description: Task management
+ *   - name: TaskProfiles
+ *     description: Task profile management
  *   - name: Authentication
  *     description: User authentication
  */
@@ -902,6 +910,745 @@
  *         description: User payment type deleted
  *       404:
  *         description: User payment type not found
+ */
+
+/**
+ * @swagger
+ * /profiles:
+ *   get:
+ *     summary: Retrieve a list of profiles
+ *     tags: [Profiles]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   profileName:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /profiles/{id}:
+ *   get:
+ *     summary: Retrieve a single profile by ID
+ *     tags: [Profiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The profile ID
+ *     responses:
+ *       200:
+ *         description: A single profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileName:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Profile not found
+ */
+
+/**
+ * @swagger
+ * /profiles:
+ *   post:
+ *     summary: Create a new profile
+ *     tags: [Profiles]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profileName:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileName:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /profiles/{id}:
+ *   put:
+ *     summary: Update a profile by ID
+ *     tags: [Profiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The profile ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profileName:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileName:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Profile not found
+ */
+
+/**
+ * @swagger
+ * /profiles/{id}:
+ *   delete:
+ *     summary: Delete a profile by ID
+ *     tags: [Profiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The profile ID
+ *     responses:
+ *       200:
+ *         description: Profile deleted
+ *       404:
+ *         description: Profile not found
+ */
+
+/**
+ * @swagger
+ * /userProfiles:
+ *   get:
+ *     summary: Retrieve a list of user profiles
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of user profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   profileId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /userProfiles/{id}:
+ *   get:
+ *     summary: Retrieve a single user profile by ID
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user profile ID
+ *     responses:
+ *       200:
+ *         description: A single user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *       404:
+ *         description: User profile not found
+ */
+
+/**
+ * @swagger
+ * /userProfiles:
+ *   post:
+ *     summary: Create a new user profile
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profileId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /userProfiles/{id}:
+ *   put:
+ *     summary: Update a user profile by ID
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user profile ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profileId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated user profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *       404:
+ *         description: User profile not found
+ */
+
+/**
+ * @swagger
+ * /userProfiles/{id}:
+ *   delete:
+ *     summary: Delete a user profile by ID
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user profile ID
+ *     responses:
+ *       200:
+ *         description: User profile deleted
+ *       404:
+ *         description: User profile not found
+ */
+
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Retrieve a list of tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   createdUserId:
+ *                     type: string
+ *                   createdDate:
+ *                     type: string
+ *                     format: date-time
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     summary: Retrieve a single task by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: A single task
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 createdUserId:
+ *                   type: string
+ *                 createdDate:
+ *                   type: string
+ *                   format: date-time
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task not found
+ */
+
+/**
+ * @swagger
+ * /tasks:
+ *   post:
+ *     summary: Create a new task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               createdUserId:
+ *                 type: string
+ *               createdDate:
+ *                 type: string
+ *                 format: date-time
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created task
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 createdUserId:
+ *                   type: string
+ *                 createdDate:
+ *                   type: string
+ *                   format: date-time
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   put:
+ *     summary: Update a task by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               createdUserId:
+ *                 type: string
+ *               createdDate:
+ *                 type: string
+ *                 format: date-time
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated task
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 createdUserId:
+ *                   type: string
+ *                 createdDate:
+ *                   type: string
+ *                   format: date-time
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task not found
+ */
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     summary: Delete a task by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: Task deleted
+ *       404:
+ *         description: Task not found
+ */
+
+/**
+ * @swagger
+ * /taskProfiles:
+ *   get:
+ *     summary: Retrieve a list of task profiles
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of task profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   profileId:
+ *                     type: string
+ *                   requiredLevel:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /taskProfiles/{id}:
+ *   get:
+ *     summary: Retrieve a single task profile by ID
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task profile ID
+ *     responses:
+ *       200:
+ *         description: A single task profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 requiredLevel:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task profile not found
+ */
+
+/**
+ * @swagger
+ * /taskProfiles:
+ *   post:
+ *     summary: Create a new task profile
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               profileId:
+ *                 type: string
+ *               requiredLevel:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created task profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 requiredLevel:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /taskProfiles/{id}:
+ *   put:
+ *     summary: Update a task profile by ID
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task profile ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               profileId:
+ *                 type: string
+ *               requiredLevel:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated task profile
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 profileId:
+ *                   type: string
+ *                 requiredLevel:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task profile not found
+ */
+
+/**
+ * @swagger
+ * /taskProfiles/{id}:
+ *   delete:
+ *     summary: Delete a task profile by ID
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task profile ID
+ *     responses:
+ *       200:
+ *         description: Task profile deleted
+ *       404:
+ *         description: Task profile not found
+ */
+
+/**
+ * @swagger
+ * /taskProfiles/task/{taskId}:
+ *   get:
+ *     summary: Retrieve all profiles by task ID
+ *     tags: [TaskProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: A list of profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   profileName:
+ *                     type: string
+ *                   status:
+ *                     type: string
  */
 
 /**
