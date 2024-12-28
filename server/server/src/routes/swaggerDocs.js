@@ -27,6 +27,10 @@
  *     description: Attachment management
  *   - name: Comments
  *     description: Comment management
+ *   - name: EmployerHistories
+ *     description: Employer history management
+ *   - name: EmployeeHistories
+ *     description: Employee history management
  *   - name: Authentication
  *     description: User authentication
  */
@@ -2370,6 +2374,422 @@
  *         description: Comment deleted
  *       404:
  *         description: Comment not found
+ */
+
+/**
+ * @swagger
+ * /employerHistories:
+ *   get:
+ *     summary: Retrieve a list of employer histories
+ *     tags: [EmployerHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of employer histories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   taskStatus:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /employerHistories/{id}:
+ *   get:
+ *     summary: Retrieve a single employer history by ID
+ *     tags: [EmployerHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employer history ID
+ *     responses:
+ *       200:
+ *         description: A single employer history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Employer history not found
+ */
+
+/**
+ * @swagger
+ * /employerHistories:
+ *   post:
+ *     summary: Create a new employer history
+ *     tags: [EmployerHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskStatus:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created employer history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /employerHistories/{id}:
+ *   put:
+ *     summary: Update an employer history by ID
+ *     tags: [EmployerHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employer history ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskStatus:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated employer history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Employer history not found
+ */
+
+/**
+ * @swagger
+ * /employerHistories/{id}:
+ *   delete:
+ *     summary: Delete an employer history by ID
+ *     tags: [EmployerHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employer history ID
+ *     responses:
+ *       200:
+ *         description: Employer history deleted
+ *       404:
+ *         description: Employer history not found
+ */
+
+/**
+ * @swagger
+ * /employeeHistories:
+ *   get:
+ *     summary: Retrieve a list of employee histories
+ *     tags: [EmployeeHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of employee histories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   taskStatus:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /employeeHistories/{id}:
+ *   get:
+ *     summary: Retrieve a single employee history by ID
+ *     tags: [EmployeeHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employee history ID
+ *     responses:
+ *       200:
+ *         description: A single employee history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Employee history not found
+ */
+
+/**
+ * @swagger
+ * /employeeHistories:
+ *   post:
+ *     summary: Create a new employee history
+ *     tags: [EmployeeHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskStatus:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created employee history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /employeeHistories/{id}:
+ *   put:
+ *     summary: Update an employee history by ID
+ *     tags: [EmployeeHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employee history ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskStatus:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated employee history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 taskId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskStatus:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Employee history not found
+ */
+
+/**
+ * @swagger
+ * /employeeHistories/{id}:
+ *   delete:
+ *     summary: Delete an employee history by ID
+ *     tags: [EmployeeHistories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The employee history ID
+ *     responses:
+ *       200:
+ *         description: Employee history deleted
+ *       404:
+ *         description: Employee history not found
  */
 
 /**

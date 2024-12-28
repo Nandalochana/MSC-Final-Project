@@ -11,7 +11,9 @@ const UserLocationInfoController = require('../controllers/userLocationInfoContr
 const TaskLocationInfoController = require('../controllers/taskLocationInfoController');
 const { AttachmentController, upload: attachmentUpload } = require('../controllers/attachmentController');
 const CommentController = require('../controllers/commentController');
+const EmployerHistoryController = require('../controllers/employerHistoryController');
 const authenticateJWT = require('../middleware/authMiddleware');
+const EmployeeHistoryController = require('../controllers/employeeHistoryController');
 
 function setRoutes(app) {
     const roleController = new RoleController();
@@ -106,7 +108,21 @@ function setRoutes(app) {
     app.put('/comments/:id', authenticateJWT, commentController.updateComment.bind(commentController));
     app.delete('/comments/:id', authenticateJWT, commentController.deleteComment.bind(commentController));
 
-    // Public routes
+    const employerHistoryController = new EmployerHistoryController();
+    app.get('/employerHistories', authenticateJWT, employerHistoryController.getEmployerHistories.bind(employerHistoryController));
+    app.get('/employerHistories/:id', authenticateJWT, employerHistoryController.getEmployerHistoryById.bind(employerHistoryController));
+    app.post('/employerHistories', authenticateJWT, employerHistoryController.createEmployerHistory.bind(employerHistoryController));
+    app.put('/employerHistories/:id', authenticateJWT, employerHistoryController.updateEmployerHistory.bind(employerHistoryController));
+    app.delete('/employerHistories/:id', authenticateJWT, employerHistoryController.deleteEmployerHistory.bind(employerHistoryController));
+
+    const employeeHistoryController = new EmployeeHistoryController();
+    app.get('/employeeHistories', authenticateJWT, employeeHistoryController.getEmployeeHistories.bind(employeeHistoryController));
+    app.get('/employeeHistories/:id', authenticateJWT, employeeHistoryController.getEmployeeHistoryById.bind(employeeHistoryController));
+    app.post('/employeeHistories', authenticateJWT, employeeHistoryController.createEmployeeHistory.bind(employeeHistoryController));
+    app.put('/employeeHistories/:id', authenticateJWT, employeeHistoryController.updateEmployeeHistory.bind(employeeHistoryController));
+    app.delete('/employeeHistories/:id', authenticateJWT, employeeHistoryController.deleteEmployeeHistory.bind(employeeHistoryController));
+
+    // Auth routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));
 }
 
