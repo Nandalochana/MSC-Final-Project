@@ -5,18 +5,28 @@ This is a Node.js application designed as a server. It serves as a backend for h
 ## Project Structure
 
 ```
-server
-├── src
-│   ├── app.js               # Entry point of the application
-│   ├── controllers          # Contains request handling logic
-│   │   └── index.js
-│   ├── routes               # Defines application routes
-│   │   └── index.js
-│   └── models               # Data models for the application
-│       └── index.js
-├── package.json             # NPM configuration file
-├── .gitignore               # Specifies files to ignore in Git
-└── README.md                # Project documentation
+neural-network-analysis
+├── neural-network
+│   ├── src
+│   │   ├── data
+│   │   │   └── ratings.csv
+│   │   ├── models
+│   │   │   └── neuralNetwork.py
+│   │   ├── train.py
+│   │   └── predict.py
+│   ├── requirements.txt
+│   └── README.md
+└── server
+    ├── src
+    │   ├── controllers
+    │   │   └── analysisController.js
+    │   ├── middlewares
+    │   │   └── authMiddleware.js
+    │   ├── routes
+    │   │   └── index.js
+    │   └── app.js
+    ├── package.json
+    └── README.md
 ```
 
 ## Setup Instructions

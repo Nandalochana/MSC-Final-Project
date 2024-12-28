@@ -14,6 +14,7 @@ const CommentController = require('../controllers/commentController');
 const EmployerHistoryController = require('../controllers/employerHistoryController');
 const authenticateJWT = require('../middleware/authMiddleware');
 const EmployeeHistoryController = require('../controllers/employeeHistoryController');
+const { analyzeRatings } = require('../controllers/analysisController');
 
 function setRoutes(app) {
     const roleController = new RoleController();
@@ -126,6 +127,7 @@ function setRoutes(app) {
     app.post('/login', loginInfoController.login.bind(loginInfoController));
     app.post('/logout', authenticateJWT, loginInfoController.logout.bind(loginInfoController));
 
+    app.post('/analyse', authenticateJWT, analyzeRatings);
 }
 
 module.exports = setRoutes;

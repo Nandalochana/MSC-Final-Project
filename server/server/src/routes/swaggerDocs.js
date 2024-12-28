@@ -33,6 +33,8 @@
  *     description: Employee history management
  *   - name: Authentication
  *     description: User authentication
+ *   - name: Analyse
+ *     description: Analyse location information
  */
 
 /**
@@ -2834,4 +2836,57 @@
  *     responses:
  *       200:
  *         description: Logged out successfully
+ */
+
+/**
+ * @swagger
+ * /analyse:
+ *   post:
+ *     summary: Analyze user ratings based on latitude and longitude
+ *     tags: [Analyse]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ratings:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     latitude:
+ *                       type: number
+ *                     longitude:
+ *                       type: number
+ *                     rating:
+ *                       type: number
+ *     responses:
+ *       200:
+ *         description: Analysis successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 result:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       latitude:
+ *                         type: number
+ *                       longitude:
+ *                         type: number
+ *                       rating:
+ *                         type: number
+ *                       distance:
+ *                         type: number
+ *                       score:
+ *                         type: number
+ *       500:
+ *         description: Internal server error
  */
