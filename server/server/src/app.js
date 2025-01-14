@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const setRoutes = require('./routes/index');
+const cors = require('cors'); // Import cors
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -13,6 +14,7 @@ mongoose.connect('mongodb://localhost:27017/jamkDB', {
     useUnifiedTopology: true
 });
 
+app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 setRoutes(app);

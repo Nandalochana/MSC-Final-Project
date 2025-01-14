@@ -22,7 +22,7 @@ const locations = [
   // Add more locations here
 ];
 
-const MapPage: React.FC = () => {
+export const MapPage: React.FC = () => {
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
       <GoogleMap
@@ -37,5 +37,3 @@ const MapPage: React.FC = () => {
     </LoadScript>
   );
 };
-
-export default MapPage;
