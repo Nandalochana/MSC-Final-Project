@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
 const LoginInfo = require('../models/loginInfo');
+const Role = require('../models/role');
 
 class LoginInfoController {
     async getloginInfo(req, res) {
@@ -69,6 +72,50 @@ class LoginInfoController {
             res.status(400).json({ message: 'Token not provided' });
         }
     }
+
+
+    async signup(req, res) {
+        try {
+            const { firstName, lastName, profileImg, address1, address2, address3, telephoneNr, mobileNr, status, email, password } = req.body;
+            const existingUser = await LoginInfo.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ message: 'Email already exists' });
+            }
+            // Fetch the role for "Member"
+            let memberRole = await Role.findOne({ role: 'Member' });
+            if (!memberRole) {
+                const newMemberRole = new Role({ role: 'Member' });
+                await newMemberRole.save();
+                memberRole = newMemberRole;
+            }
+            const newUser = new User({
+                firstName,
+                lastName,
+                profileImg,
+                address1,
+                address2,
+                address3,
+                telephoneNr,
+                mobileNr,
+                status
+            });
+            await newUser.save();
+            const newLoginInfo = new LoginInfo({
+                email,
+                password: password,
+                userRoleId: memberRole,
+                status
+            });
+
+            await newLoginInfo.save();
+
+            res.status(201).json({ user: newUser, loginInfo: newLoginInfo });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
 }
+
 
 module.exports = LoginInfoController;

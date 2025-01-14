@@ -3,7 +3,7 @@ const LoginInfo = require('../models/loginInfo');
 
 const authenticateJWT = async (req, res, next) => {
     // Bypass authentication for login and create login info routes
-    if (req.path === '/login' || (req.path === '/loginInfos' && req.method === 'POST')) {
+    if (req.path === '/login' || req.path === '/signup' || (req.path === '/loginInfos' && req.method === 'POST')) {
         return next();
     }
 

@@ -2837,6 +2837,59 @@
  *       200:
  *         description: Logged out successfully
  */
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: Signup a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - address1
+ *               - telephoneNr
+ *               - mobileNr
+ *               - email
+ *               - password
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               profileImg:
+ *                 type: string
+ *               address1:
+ *                 type: string
+ *               address2:
+ *                 type: string
+ *               address3:
+ *                 type: string
+ *               telephoneNr:
+ *                 type: string
+ *               mobileNr:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE]
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Email already exists
+ *       500:
+ *         description: Internal server error
+ */
+
 
 /**
  * @swagger

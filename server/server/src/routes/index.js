@@ -126,6 +126,7 @@ function setRoutes(app) {
     // Auth routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));
     app.post('/logout', authenticateJWT, loginInfoController.logout.bind(loginInfoController));
+    app.post('/signup', loginInfoController.signup);
 
     app.post('/analyse', authenticateJWT, analyzeRatings);
 }
