@@ -17,7 +17,6 @@ loginInfoSchema.pre('save', async function (next) {
 });
 
 loginInfoSchema.methods.comparePassword = function (password) {
-    console.log(bcrypt.compare(password, this.password));
     return bcrypt.compare(password, this.password);
 };
 
