@@ -73,22 +73,29 @@ class LoginInfoController {
             res.status(400).json({ message: 'Token not provided' });
         }
     }
-
-
+    
     async signup(req, res) {
         try {
-            const { firstName, lastName, profileImg, address1, address2, address3, telephoneNr, mobileNr, status, email, password } = req.body;
+            const { firstName, lastName, profileImg, address1, address2, address3, telephoneNr, mobileNr, status, email, password, role } = req.body;
             const existingUser = await LoginInfo.findOne({ email });
             if (existingUser) {
                 return res.status(400).json({ message: 'Email already exists' });
             }
-            // Fetch the role for "Member"
-            let memberRole = await Role.findOne({ role: 'Member' });
-            if (!memberRole) {
-                const newMemberRole = new Role({ role: 'Member' });
-                await newMemberRole.save();
-                memberRole = newMemberRole;
+
+            // Validate role
+            const validRoles = ['Admin', 'Freelancer', 'Buyer'];
+            if (!validRoles.includes(role)) {
+                return res.status(400).json({ message: 'Invalid role' });
             }
+
+            // Fetch or create the role
+            let userRole = await Role.findOne({ role });
+            if (!userRole) {
+                const newRole = new Role({ role });
+                await newRole.save();
+                userRole = newRole;
+            }
+
             const newUser = new User({
                 firstName,
                 lastName,
@@ -101,11 +108,12 @@ class LoginInfoController {
                 status
             });
             await newUser.save();
+
             const newLoginInfo = new LoginInfo({
                 email,
                 password: password,
-                userRoleId: memberRole,
-                userId : newUser,
+                userRoleId: userRole,
+                userId: newUser,
                 status
             });
 

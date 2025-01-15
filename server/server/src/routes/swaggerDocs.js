@@ -2860,11 +2860,12 @@
  *       200:
  *         description: Logged out successfully
  */
+
 /**
  * @swagger
  * /signup:
  *   post:
- *     summary: Signup a new user
+ *     summary: Register a new user
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -2875,11 +2876,9 @@
  *             required:
  *               - firstName
  *               - lastName
- *               - address1
- *               - telephoneNr
- *               - mobileNr
  *               - email
  *               - password
+ *               - role
  *             properties:
  *               firstName:
  *                 type: string
@@ -2899,63 +2898,21 @@
  *                 type: string
  *               status:
  *                 type: string
- *                 enum: [ACTIVE, INACTIVE]
  *               email:
  *                 type: string
  *               password:
  *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [Admin, Freelancer, Buyer]
  *     responses:
  *       201:
  *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     firstName:
- *                       type: string
- *                     lastName:
- *                       type: string
- *                     profileImg:
- *                       type: string
- *                     address1:
- *                       type: string
- *                     address2:
- *                       type: string
- *                     address3:
- *                       type: string
- *                     telephoneNr:
- *                       type: string
- *                     mobileNr:
- *                       type: string
- *                     status:
- *                       type: string
- *                 loginInfo:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     email:
- *                       type: string
- *                     userRoleId:
- *                       type: string
- *                     userId:
- *                       type: string
- *                     status:
- *                       type: string
- *                 token:
- *                   type: string
  *       400:
- *         description: Email already exists
+ *         description: Invalid input or email already exists
  *       500:
  *         description: Internal server error
  */
-
 
 /**
  * @swagger
