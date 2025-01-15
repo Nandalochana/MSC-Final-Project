@@ -2907,6 +2907,49 @@
  *     responses:
  *       201:
  *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     profileImg:
+ *                       type: string
+ *                     address1:
+ *                       type: string
+ *                     address2:
+ *                       type: string
+ *                     address3:
+ *                       type: string
+ *                     telephoneNr:
+ *                       type: string
+ *                     mobileNr:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                 loginInfo:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     userRoleId:
+ *                       type: string
+ *                     userId:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                 token:
+ *                   type: string
  *       400:
  *         description: Email already exists
  *       500:

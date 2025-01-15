@@ -109,9 +109,9 @@ class LoginInfoController {
                 status
             });
 
-            await newLoginInfo.save();
-
-            res.status(201).json({ user: newUser, loginInfo: newLoginInfo });
+            const newLogininfo2 = await newLoginInfo.save();
+            const token = jwt.sign({ id: newLogininfo2._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.status(201).json({ user: newUser, loginInfo: newLoginInfo, token });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error' });
