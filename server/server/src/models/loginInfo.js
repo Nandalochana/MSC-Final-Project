@@ -6,6 +6,7 @@ const loginInfoSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     userRoleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     status: { type: String, enum: Object.values(StatusEnum), default: StatusEnum.ACTIVE }
 });
 

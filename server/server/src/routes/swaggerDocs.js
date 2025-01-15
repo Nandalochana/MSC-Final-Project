@@ -456,6 +456,8 @@
  *                     type: string
  *                   userRoleId:
  *                     type: string
+ *                   userId:
+ *                     type: string
  *                   status:
  *                     type: string
  */
@@ -489,6 +491,8 @@
  *                   type: string
  *                 userRoleId:
  *                   type: string
+ *                 userId:
+ *                   type: string
  *                 status:
  *                   type: string
  *       404:
@@ -514,6 +518,8 @@
  *                 type: string
  *               userRoleId:
  *                 type: string
+ *               userId:
+ *                 type: string
  *               status:
  *                 type: string
  *     responses:
@@ -529,6 +535,8 @@
  *                 email:
  *                   type: string
  *                 userRoleId:
+ *                   type: string
+ *                 userId:
  *                   type: string
  *                 status:
  *                   type: string
@@ -562,6 +570,8 @@
  *                 type: string
  *               userRoleId:
  *                 type: string
+ *               userId:
+ *                 type: string
  *               status:
  *                 type: string
  *     responses:
@@ -577,6 +587,8 @@
  *                 email:
  *                   type: string
  *                 userRoleId:
+ *                   type: string
+ *                 userId:
  *                   type: string
  *                 status:
  *                   type: string
@@ -2821,6 +2833,17 @@
  *               properties:
  *                 token:
  *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
  *       401:
  *         description: Invalid email or password
  */

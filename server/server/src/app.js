@@ -15,12 +15,7 @@ mongoose.connect('mongodb://localhost:27017/jamkDB', {
     useUnifiedTopology: true
 });
 
-const corsOptions = {
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow requests from port 5173
-    optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions)); // Enable CORS with options
+app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 setRoutes(app);
@@ -30,8 +25,4 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-});
-
-app.listen(5173, () => {
-    console.log(`Server is also running on port 5173`);
 });

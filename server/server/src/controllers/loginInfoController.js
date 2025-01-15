@@ -57,7 +57,8 @@ class LoginInfoController {
 
         if (loginInfo && await loginInfo.comparePassword(password)) {
             const token = jwt.sign({ id: loginInfo._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token });
+            const user = await User.findById(loginInfo.userId); 
+            res.status(200).json({ token, user }); // Pass token and user to client
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -104,6 +105,7 @@ class LoginInfoController {
                 email,
                 password: password,
                 userRoleId: memberRole,
+                userId : newUser,
                 status
             });
 
