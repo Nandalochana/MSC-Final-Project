@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const StatusEnum = require('./statusEnum');
+const loginInfo = require('./loginInfo');
 
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
@@ -10,7 +11,8 @@ const userSchema = new mongoose.Schema({
     address3: { type: String },
     telephoneNr: { type: String, required: true },
     mobileNr: { type: String, required: true },
-    status: { type: String, enum: Object.values(StatusEnum), default: StatusEnum.ACTIVE }
+    status: { type: String, enum: Object.values(StatusEnum), default: StatusEnum.ACTIVE },
+    loginInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'loginInfo' }
 });
 
 const User = mongoose.model('User', userSchema);

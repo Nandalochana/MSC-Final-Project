@@ -3,7 +3,7 @@ const UserProfile = require('../models/userProfile');
 class UserProfileController {
     async getUserProfiles(req, res) {
         const userProfiles = await UserProfile.find().populate('profileId').populate('userId');
-        res.status(200).json(userProfiles);
+        res.status(200).json({ data: userProfiles });
     }
 
     async getUserProfileById(req, res) {

@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 //profile schema
 export const SingleProfileSchema = z.object({
   _id: z.string(),
@@ -33,7 +32,7 @@ export const SingleUserProfileSchema = z.object({
     mobileNr: z.string(),
     status: z.string(),
     __v: z.number(),
-  }),
+  }).nullable(),
 });
 
 export const UserProfilesSchema = z.object({
@@ -54,8 +53,6 @@ export const UserProfileAddResponseSchema = z.object({
 export const DeleteProfileResponseSchema = z.object({
   message: z.string()
 });
-
-
 
 export type ProfileType = z.infer<typeof UserProfilesSchema>;
 export type ProfileRequestType = z.infer<typeof UserProfileAddRequestSchema>;

@@ -15,6 +15,7 @@ const EmployerHistoryController = require('../controllers/employerHistoryControl
 const authenticateJWT = require('../middleware/authMiddleware');
 const EmployeeHistoryController = require('../controllers/employeeHistoryController');
 const { analyzeRatings } = require('../controllers/analysisController');
+const SearchController = require('../controllers/SearchController');
 
 function setRoutes(app) {
     const roleController = new RoleController();
@@ -122,6 +123,10 @@ function setRoutes(app) {
     app.post('/employeeHistories', authenticateJWT, employeeHistoryController.createEmployeeHistory.bind(employeeHistoryController));
     app.put('/employeeHistories/:id', authenticateJWT, employeeHistoryController.updateEmployeeHistory.bind(employeeHistoryController));
     app.delete('/employeeHistories/:id', authenticateJWT, employeeHistoryController.deleteEmployeeHistory.bind(employeeHistoryController));
+
+    const searchController = new SearchController();
+    app.get('/search/freelancers', authenticateJWT, searchController.loadAllFreelancers.bind(searchController));
+    app.get('/search/users', authenticateJWT, searchController.searchUserByName.bind(searchController));
 
     // Auth routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));

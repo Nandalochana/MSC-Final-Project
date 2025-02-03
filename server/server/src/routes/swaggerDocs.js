@@ -35,6 +35,8 @@
  *     description: User authentication
  *   - name: Analyse
  *     description: Analyse location information
+ *   - name: Search
+ *     description: Search management
  */
 
 /**
@@ -2965,4 +2967,84 @@
  *                         type: number
  *       500:
  *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /search/freelancers:
+ *   get:
+ *     summary: Retrieve a list of freelancers
+ *     tags: [Search]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of freelancers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   roleId:
+ *                     type: string
+ *                   loginInfo:
+ *                     type: object
+ *                     properties:
+ *                       email:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ */
+
+/**
+ * @swagger
+ * /search/users:
+ *   get:
+ *     summary: Search users by name
+ *     tags: [Search]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The name to search for
+ *     responses:
+ *       200:
+ *         description: A list of users matching the search criteria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   address1:
+ *                     type: string
+ *                   address2:
+ *                     type: string
+ *                   address3:
+ *                     type: string
+ *                   telephoneNr:
+ *                     type: string
+ *                   mobileNr:
+ *                     type: string
+ *                   status:
+ *                     type: string
  */
