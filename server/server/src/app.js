@@ -17,11 +17,14 @@ mongoose.connect('mongodb://localhost:27017/jamkDB', {
 
 const corsOptions = {
     origin: 'http://localhost:5173', // Allow requests from port 5173
+    methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
     credentials: true // Allow credentials
 };
 
 app.use(cors(corsOptions)); // Enable CORS with options
+app.options('*', cors(corsOptions)); // Enable pre-flight
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 setRoutes(app);

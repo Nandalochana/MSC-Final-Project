@@ -60,7 +60,7 @@ class LoginInfoController {
             console.log(loginInfo.userId);
             const user = await User.findById(loginInfo.userId); 
             console.log(user);
-            res.status(200).json({ token, user }); // Pass token and user to client
+            res.status(200).json({ user: user, useloginInfo:loginInfo,token }); // Pass token and user to client
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }
