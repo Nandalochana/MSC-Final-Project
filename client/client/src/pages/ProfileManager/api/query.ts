@@ -54,7 +54,8 @@ export function useDeleteProfile() {
 
   return useMutation<z.infer<typeof DeleteProfileResponseSchema>, AxiosError<ErrorResponse>, string>({
     mutationFn: async (profileId: string) => {
-      return ProfileAPI.deleteUserProfile(profileId);
+      console.log("Deleting profile with ID:", profileId);
+      return ProfileAPI.deleteUserProfile({ userProfileId: profileId}); 
     },
     onSuccess: (_, profileId) => {
       // Update the userProfiles query cache to remove the deleted profile

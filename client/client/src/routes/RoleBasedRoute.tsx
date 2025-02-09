@@ -4,7 +4,7 @@ import { useUserStore } from "../store/user-store";
 
 type RoleBasedRouteProps = {
   children: ReactNode;
-  allowedRole: "Freelancer" | "Buyer";
+  allowedRole: "Freelancer" | "Buyer" | "Admin";
 };
 
 export const RoleBasedRoute: FC<RoleBasedRouteProps> = ({ children, allowedRole }) => {
@@ -22,6 +22,8 @@ export const RoleBasedRoute: FC<RoleBasedRouteProps> = ({ children, allowedRole 
       return <Navigate to="/freelancer" state={{ from: location }} replace />;
     } else if (userRole === "Buyer") {
       return <Navigate to="/buyer" state={{ from: location }} replace />;
+    } if (userRole === "Admin") {
+      return <Navigate to="/admin" state={{ from: location }} replace />;
     }
   }
 

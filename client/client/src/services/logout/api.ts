@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { api } from "../../lib/utils/api";
 import { API_ENDPOINT } from "../../lib/utils/endpoints-constant";
-import { useUserStore } from "../../store/user-store";
+// import { useUserStore } from "../../store/user-store";
 import { LogoutAPIRequestSchema, LogoutAPIResponseSchema } from "./schema";
-import { Routes } from "../../lib/utils/routes-constants";
+// import { Routes } from "../../lib/utils/routes-constants";
 
 const LogoutRequest = LogoutAPIRequestSchema;
 
@@ -27,9 +27,9 @@ const logout = api<
 });
 
 export function useLogOut() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { removeCredentials } = useUserStore();
+  // const { removeCredentials } = useUserStore();
   return useMutation<
     z.infer<typeof LogoutAPIResponseSchema>,
     AxiosError<ErrorResponse>
@@ -38,8 +38,8 @@ export function useLogOut() {
     onSuccess: (data) => {
       const { message } = data;
       console.log('message', message);
-      removeCredentials();
-      navigate(Routes.SIGNIN);
+      // removeCredentials();
+      // navigate(Routes.SIGNIN);
     },
     onError: (error) => {
       const errorMessage = error.response?.data.message;

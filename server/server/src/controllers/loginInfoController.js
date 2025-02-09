@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const LoginInfo = require('../models/loginInfo');
 const Role = require('../models/role');
+const mongoose = require('mongoose');
 
 class LoginInfoController {
     async getloginInfo(req, res) {
@@ -56,11 +57,13 @@ class LoginInfoController {
         const loginInfo = await LoginInfo.findOne({ email }).populate('userRoleId');
 
         if (loginInfo && await loginInfo.comparePassword(password)) {
-            const token = jwt.sign({ id: loginInfo._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            console.log(loginInfo.userId);
-            const user = await User.findById(loginInfo.userId); 
-            console.log(user);
-            res.status(200).json({ user: user, useloginInfo:loginInfo,token }); // Pass token and user to client
+            const user = await User.findById(loginInfo.userId);
+            if (user && user.status === 'active') {
+                const token = jwt.sign({ id: loginInfo._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                res.status(200).json({ user: user, loginInfo: loginInfo, token });
+            } else {
+                res.status(403).json({ message: 'User account is not active, please contact admin support' });
+            }
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -75,7 +78,7 @@ class LoginInfoController {
             res.status(400).json({ message: 'Token not provided' });
         }
     }
-    
+
     async signup(req, res) {
         try {
             const { firstName, lastName, profileImg, address1, address2, address3, telephoneNr, mobileNr, status, email, password, role } = req.body;
@@ -124,6 +127,39 @@ class LoginInfoController {
             res.status(201).json({ user: newUser, loginInfo: newLoginInfo, token });
         } catch (error) {
             console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    async updateRole(req, res) {
+        try {
+            const { role, userId } = req.body;
+
+            // Validate role
+            const validRoles = ['Admin', 'Freelancer', 'Buyer'];
+            if (!validRoles.includes(role)) {
+                return res.status(400).json({ message: 'Invalid role' });
+            }
+
+            // Fetch the role object
+            const userRole = await Role.findOne({ role });
+            if (!userRole) {
+                return res.status(404).json({ message: 'Role not found' });
+            }
+            // Convert userId string to ObjectId if necessary
+            if (!mongoose.Types.ObjectId.isValid(userId)) {
+                return res.status(400).json({ message: 'Invalid userId' });
+            }
+            // Find the LoginInfo by userId
+            const loginInfo = await LoginInfo.findOne({ userId: userId });
+            if (!loginInfo) {
+                return res.status(404).json({ message: 'LoginInfo not found' });
+            }
+            loginInfo.userRoleId = userRole._id;
+            const updatedLoginInfo = await loginInfo.save();
+            console.log("Updated");
+            res.status(200).json();
+        } catch (error) {
             res.status(500).json({ message: 'Internal server error' });
         }
     }

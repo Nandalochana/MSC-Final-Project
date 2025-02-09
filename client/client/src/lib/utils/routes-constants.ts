@@ -6,5 +6,8 @@ export const Routes = {
   FREELANCER: "/freelancer",
   PROFILES: "/freelancer/profiles",
   BUYER: "/buyer",
+  ADMIN: "/admin",
   FREELANCER_DETAILS: "/buyer/freelancer/:id",
+  USER_SETTINGS: "/settings/:id",
+  TASK_MANAGEMENT: "/task/:id",
 };

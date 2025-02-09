@@ -30,6 +30,7 @@ function setRoutes(app) {
     app.get('/loginInfo/:id', authenticateJWT, loginInfoController.getLoginInfoById.bind(loginInfoController));
     app.post('/loginInfo', authenticateJWT, loginInfoController.createLoginInfo.bind(loginInfoController));
     app.put('/loginInfo/:id', authenticateJWT, loginInfoController.updateLoginInfo.bind(loginInfoController));
+    app.post('/loginInfo/updateRole', authenticateJWT, loginInfoController.updateRole.bind(loginInfoController)); // New route for updating role
     app.delete('/loginInfo/:id', authenticateJWT, loginInfoController.deleteLoginInfo.bind(loginInfoController));
 
     const paymentTypeController = new PaymentTypeController();
@@ -48,9 +49,11 @@ function setRoutes(app) {
 
     const userController = new UserController();
     app.get('/users', authenticateJWT, userController.getUsers.bind(userController));
+    app.get('/users/withLoginInfo', authenticateJWT, userController.getUsersWithLoginInfo.bind(userController));
     app.get('/users/:id', authenticateJWT, userController.getUserById.bind(userController));
     app.post('/users', authenticateJWT, userUpload.single('profileImg'), userController.createUser.bind(userController));
     app.put('/users/:id', authenticateJWT, userUpload.single('profileImg'), userController.updateUser.bind(userController));
+    app.put('/users/toggleStatus/:id', authenticateJWT, userController.toggleUserStatus.bind(userController));
     app.delete('/users/:id', authenticateJWT, userController.deleteUser.bind(userController));
 
     const profileController = new ProfileController();
@@ -63,15 +66,18 @@ function setRoutes(app) {
     const userProfileController = new UserProfileController();
     app.get('/userProfiles', authenticateJWT, userProfileController.getUserProfiles.bind(userProfileController));
     app.get('/userProfiles/:id', authenticateJWT, userProfileController.getUserProfileById.bind(userProfileController));
+    app.get('/userProfiles/user/:userId', authenticateJWT, userProfileController.getUserProfileByUserId.bind(userProfileController));
     app.post('/userProfiles', authenticateJWT, userProfileController.createUserProfile.bind(userProfileController));
     app.put('/userProfiles/:id', authenticateJWT, userProfileController.updateUserProfile.bind(userProfileController));
     app.delete('/userProfiles/:id', authenticateJWT, userProfileController.deleteUserProfile.bind(userProfileController));
 
     const taskController = new TaskController();
     app.get('/tasks', authenticateJWT, taskController.getTasks.bind(taskController));
+    app.get('/tasks/userId', authenticateJWT, taskController.getTaskByUserId.bind(taskController));
     app.get('/tasks/:id', authenticateJWT, taskController.getTaskById.bind(taskController));
     app.post('/tasks', authenticateJWT, taskController.createTask.bind(taskController));
     app.put('/tasks/:id', authenticateJWT, taskController.updateTask.bind(taskController));
+    app.put('/tasks/toggleStatus/:id', authenticateJWT, taskController.toggleTaskStatus.bind(taskController));
     app.delete('/tasks/:id', authenticateJWT, taskController.deleteTask.bind(taskController));
 
     const taskProfileController = new TaskProfileController();
@@ -125,7 +131,7 @@ function setRoutes(app) {
     app.delete('/employeeHistories/:id', authenticateJWT, employeeHistoryController.deleteEmployeeHistory.bind(employeeHistoryController));
 
     const searchController = new SearchController();
-    app.get('/search/freelancers', authenticateJWT, searchController.loadAllFreelancers.bind(searchController));
+    app.get('/search/loadAllFreelancersByFilter', authenticateJWT, searchController.loadAllFreelancersByFilter.bind(searchController));
     app.get('/search/users', authenticateJWT, searchController.searchUserByName.bind(searchController));
 
     // Auth routes

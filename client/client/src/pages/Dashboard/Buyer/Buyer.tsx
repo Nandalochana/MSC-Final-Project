@@ -1,10 +1,18 @@
 import { FC, useState } from "react";
-import LeftSidebar from "./components/LeftSidebar";
 import ProfileView from "./components/ProfileView";
 import MapView from "./components/MapView";
+import LeftSidebar from "./components/LeftSidebar";
 
 export const Buyer: FC = () => {
   const [activeTab, setActiveTab] = useState<"map" | "profile">("profile");
+  const [nameFilter, setNameFilter] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  // Function to apply filters
+  const handleApplyFilter = (name: string, categories: string[]) => {
+    setNameFilter(name);
+    setSelectedCategories(categories);
+  };
 
   return (
     <div className="mx-auto min-h-screen">
@@ -13,9 +21,9 @@ export const Buyer: FC = () => {
         <h1 className="text-3xl font-bold">Buyer Dashboard</h1>
       </section>
 
-      <div className="flex h-screen container mx-auto my-5">
-        {/* Left Sidebar */}
-        <LeftSidebar />
+      <div className="flex h-screen md:flex-row flex-col container mx-auto my-5">
+        {/* Sidebar with Filters */}
+        <LeftSidebar onFilterChange={handleApplyFilter} />
 
         {/* Main Content */}
         <div className="flex-1 p-4">
@@ -42,8 +50,13 @@ export const Buyer: FC = () => {
           </div>
 
           {/* Content */}
-          <div className="bg-gray-100 p-4 rounded shadow max-h-full overflow-auto">
-            {activeTab === "profile" ? <ProfileView /> : <MapView />}
+          <div className="">
+            {activeTab === "profile" ? (
+              <ProfileView nameFilter={nameFilter} selectedCategories={selectedCategories} />
+            ) : (
+              <MapView />
+              // <MapView nameFilter={nameFilter} selectedCategories={selectedCategories} />
+            )}
           </div>
         </div>
       </div>

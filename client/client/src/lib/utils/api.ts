@@ -4,7 +4,7 @@ import { instance, instanceWithoutInterceptors } from "../axiosInstance";
 
 interface APICallPayload<Request, Response> {
   method: Method;
-  path: string;
+  path: string | ((requestData: Request) => string);
   requestSchema: z.ZodType<Request>;
   responseSchema: z.ZodType<Response>;
   type?: "private" | "public";
@@ -21,40 +21,43 @@ export function api<Request, Response>({
     // Validate request data
     requestSchema.parse(requestData);
 
-    // Prepare API call
-    let url = "http://localhost:3000/" + path;
-    let data = null;
+    // Determine the API URL
+    let url = typeof path === "function" ? path(requestData) : path;
 
-    if (requestData) {
-      if (method === "GET" || method === "DELETE") {
-        url += `${requestData}`;
-      } else {
-        data = requestData;
-      }
+    // Define API call payload
+    let data = null;
+    let params = undefined;
+
+    if (method === "GET") {
+      params = requestData; // Set requestData as query parameters
+    } else {
+      data = requestData; // Send data in body for non-GET requests
     }
 
+    console.log("API Call:", { url, method, params, data });
+    url = "http://localhost:3000/" + url;
     const config: AxiosRequestConfig = {
       method,
       url,
       data,
+      params, // Attach query parameters for GET requests
     };
-     console.log('url', url);
-    // Make API call base on the type of request
+
+    // Make API call based on type
     const response =
       type === "private"
         ? await instance(config)
         : await instanceWithoutInterceptors(config);
 
-    // Parse and validate response data
+    // Validate response
     const result = responseSchema.safeParse(response.data);
-console.log('response', response.data);
+
     if (!result.success) {
-      console.log('result.error', result);
       console.error("🚨 Safe-Parsing Failed ", result.error);
       throw new Error(result.error.message);
     } else {
-      console.log('result.data', result.data);
       return result.data;
     }
   };
 }
+

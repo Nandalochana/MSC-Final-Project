@@ -1,6 +1,9 @@
 const User = require('../models/user');
 const multer = require('multer');
 const path = require('path');
+const LoginInfo = require('../models/loginInfo');
+const Role = require('../models/role');
+const { console } = require('inspector');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -20,10 +23,24 @@ class UserController {
         res.status(200).json(users);
     }
 
+    async getUsersWithLoginInfo(req, res) {
+        console.log('getUsersWithLoginInfo');
+        try {
+            const users = await User.find();
+            const usersWithLoginInfo = await Promise.all(users.map(async (user) => {
+                const loginInfo = await LoginInfo.findOne({ userId: user._id }).populate('userRoleId');
+                return { ...user.toObject(), loginInfo };
+            }));
+            res.status(200).json({ data: usersWithLoginInfo });
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
     async getUserById(req, res) {
         const user = await User.findById(req.params.id);
         if (user) {
-            res.status(200).json(user);
+            res.status(200).json({data: user});
         } else {
             res.status(404).json({ message: 'User not found' });
         }
@@ -49,18 +66,38 @@ class UserController {
         };
         const updatedUser = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
         if (updatedUser) {
-            res.status(200).json(updatedUser);
+            res.status(200).json({data: updatedUser});
         } else {
             res.status(404).json({ message: 'User not found' });
         }
     }
 
     async deleteUser(req, res) {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-        if (deletedUser) {
-            res.status(200).json({ message: 'User deleted' });
-        } else {
-            res.status(404).json({ message: 'User not found' });
+        try {
+            const deletedUser = await User.findByIdAndDelete(req.params.id);
+            if (deletedUser) {
+                await LoginInfo.findOneAndDelete({ userId: req.params.id });
+                res.status(200).json({ message: 'User and associated login info deleted' });
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    async toggleUserStatus(req, res) {
+        try {
+            const user = await User.findById(req.params.id);
+            if (user) {
+                user.status = user.status === 'active' ? 'disable' : 'active';
+                await user.save();
+                res.status(200).json({ data: user });
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
 }

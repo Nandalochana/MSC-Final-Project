@@ -10,7 +10,10 @@ import { Freelancer } from "../pages/Dashboard/Freelancer/Freelancer";
 import { Buyer } from "../pages/Dashboard/Buyer/Buyer";
 import { RoleBasedRoute } from "./RoleBasedRoute";
 import CategoriesPage from "../pages/ProfileManager/page";
-import SellerProfileView from "../pages/Dashboard/Buyer/SellerProfileView";
+import FreelancerProfileView from "../pages/Dashboard/Buyer/FreelancerProfileView";
+import UserProfilePage from "../pages/UserSettings/UserProfilePage";
+import { Admin } from "../pages/Dashboard/Admin/Admin";
+import TaskPage from "../pages/UserSettings/components/TaskPage";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +50,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: Routes.TASK_MANAGEMENT,
+        element: (
+          <RoleBasedRoute allowedRole="Buyer">
+            <TaskPage />
+          </RoleBasedRoute>
+        ),
+      },
+      {
         path: Routes.BUYER,
         element: (
           <RoleBasedRoute allowedRole="Buyer">
@@ -58,8 +69,24 @@ export const router = createBrowserRouter([
         path: Routes.FREELANCER_DETAILS,
         element: (
           <RoleBasedRoute allowedRole="Buyer">
-            <SellerProfileView />
+            <FreelancerProfileView />
           </RoleBasedRoute>
+        ),
+      },
+      {
+        path: Routes.ADMIN,
+        element: (
+          <RoleBasedRoute allowedRole="Admin">
+            <Admin />
+          </RoleBasedRoute>
+        ),
+      },
+      {
+        path: Routes.USER_SETTINGS,
+        element: (
+          <PrivateRoute>
+            <UserProfilePage />
+          </PrivateRoute>
         ),
       },
       {
@@ -77,7 +104,7 @@ export const router = createBrowserRouter([
             <Login />
           </PublicRoute>
         ),
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]);

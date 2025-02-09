@@ -433,6 +433,60 @@
  *         description: User not found
  */
 
+/**
+ * @swagger
+ * /users/withLoginInfo:
+ *   get:
+ *     summary: Retrieve a list of users with their login information
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users with login information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   address1:
+ *                     type: string
+ *                   address2:
+ *                     type: string
+ *                   address3:
+ *                     type: string
+ *                   telephoneNr:
+ *                     type: string
+ *                   mobileNr:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                   profileImg:
+ *                     type: string
+ *                   loginInfo:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                       userRoleId:
+ *                         type: string
+ *                       userId:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *       500:
+ *         description: Internal server error
+ */
 
 /**
  * @swagger
@@ -618,6 +672,51 @@
  *         description: Login information deleted
  *       404:
  *         description: Login information not found
+ */
+
+/**
+ * @swagger
+ * /loginInfo/updateRole:
+ *   post:
+ *     summary: Update the role of a user
+ *     tags: [loginInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated login information with new role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 userRoleId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       400:
+ *         description: Invalid role or input
+ *       404:
+ *         description: Role or LoginInfo not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -1262,6 +1361,41 @@
 
 /**
  * @swagger
+ * /userProfiles/user/{userId}:
+ *   get:
+ *     summary: Retrieve user profiles by user ID
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A list of user profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   profileId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *       404:
+ *         description: User profiles not found
+ */
+
+/**
+ * @swagger
  * /tasks:
  *   get:
  *     summary: Retrieve a list of tasks
@@ -1460,6 +1594,90 @@
  *         description: Task deleted
  *       404:
  *         description: Task not found
+ */
+
+/**
+ * @swagger
+ * /tasks/userId:
+ *   get:
+ *     summary: Retrieve tasks by user ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   createdUserId:
+ *                     type: string
+ *                   createdDate:
+ *                     type: string
+ *                     format: date-time
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *       404:
+ *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /tasks/toggleStatus/{id}:
+ *   put:
+ *     summary: Toggle the status of a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: The updated task with toggled status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 createdUserId:
+ *                   type: string
+ *                 createdDate:
+ *                   type: string
+ *                   format: date-time
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -2971,12 +3189,32 @@
 
 /**
  * @swagger
- * /search/freelancers:
+ * /search/loadAllFreelancersByFilter:
  *   get:
- *     summary: Retrieve a list of freelancers
+ *     summary: Retrieve a list of freelancers with filters
  *     tags: [Search]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: firstName
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by first name
+ *       - in: query
+ *         name: lastName
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by last name
+ *       - in: query
+ *         name: profiles
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: 'GUI,Programming'
+ *         description: Filter by profiles (comma-separated values)
  *     responses:
  *       200:
  *         description: A list of freelancers
@@ -3047,4 +3285,53 @@
  *                     type: string
  *                   status:
  *                     type: string
+ */
+
+/**
+ * @swagger
+ * /users/toggleStatus/{id}:
+ *   put:
+ *     summary: Toggle the status of a user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: The updated user with toggled status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 address1:
+ *                   type: string
+ *                 address2:
+ *                   type: string
+ *                 address3:
+ *                   type: string
+ *                 telephoneNr:
+ *                   type: string
+ *                 mobileNr:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                 profileImg:
+ *                   type: string
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
  */

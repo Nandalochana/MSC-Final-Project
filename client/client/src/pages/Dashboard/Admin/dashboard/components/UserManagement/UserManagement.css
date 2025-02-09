@@ -1,0 +1,17 @@
+.user-management-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.user-management-container h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center;
+}
+
+.user-table-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

@@ -32,6 +32,18 @@ export const LoginAPIResponseSchema = z.object({
     status: z.string(),
     __v: z.number(),
   }),
+  loginInfo: z.object({
+    email: z.string().email(),
+    password: z.string(),
+    userRoleId: z.object({
+      _id: z.string(),
+      role: z.string(),
+      __v: z.number(),
+    }),
+    status: z.string(),
+    _id: z.string(),
+    __v: z.number(),
+  }),
 });
 
 export type LoginAPIResponseType = z.infer<typeof LoginAPIResponseSchema>;

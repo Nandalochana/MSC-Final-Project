@@ -3,25 +3,31 @@ import { useUserStore } from "../../../store/user-store";
 import { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useLogOut } from "../../../services/logout/api";
+import { Routes } from "../../../lib/utils/routes-constants";
 
 export const Header = () => {
   const { user } = useUserStore();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const { removeCredentials } = useUserStore();
   const logoutMutation = useLogOut();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logoutMutation.mutate();
+    removeCredentials();
+    navigate(Routes.SIGNIN);
     setDropdownOpen(false);
   };
 
   const handleDashboardRedirect = () => {
     if (user?.loginInfo?.userRoleId?.role === "Freelancer") {
-      navigate("/freelancer"); // Redirect to Freelancer dashboard
+      navigate("/freelancer");
     } else if (user?.loginInfo?.userRoleId?.role === "Buyer") {
-      navigate("/buyer"); // Redirect to Buyer dashboard
+      navigate("/buyer");
+    } else if (user?.loginInfo?.userRoleId?.role === "Admin") {
+      navigate("/admin");
     }
     setDropdownOpen(false);
   };
@@ -43,10 +49,28 @@ export const Header = () => {
     };
   }, []);
 
+  // Change header background on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <div
       id="navbar"
-      className="border-bf px-3 py-2 flex items-center justify-between md:justify-around fixed top-0 w-full z-50 duration-500 text-black border-transparent max-w-screen"
+      className={`fixed top-0 w-full z-50 px-3 py-2 flex items-center justify-between md:justify-around transition-colors duration-300 ${
+        isScrolled ? "bg-white shadow-md" : "bg-transparent"
+      }`}
     >
       {/* Logo */}
       <Link to="/">
@@ -69,7 +93,7 @@ export const Header = () => {
           </Link>
         </div>
 
-        {/* Conditional Rendering for User */}
+        {/* User Dropdown */}
         <div>
           {user?.accessToken ? (
             <div className="relative" ref={dropdownRef}>
@@ -79,7 +103,6 @@ export const Header = () => {
               >
                 <div className="flex items-center gap-2">
                   {user?.user?.firstName || "User"}
-
                   {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
                 </div>
               </button>
@@ -91,12 +114,29 @@ export const Header = () => {
                   >
                     Dashboard
                   </button>
-                 {user?.loginInfo?.userRoleId?.role === "Freelancer" && <button
-                    onClick={() => navigate("/freelancer/profiles")}
+                  <button
+                    onClick={() => navigate(`/settings/${user?.user?._id}`)}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                   >
-                    Profiles
-                  </button>}
+                    Settings
+                  </button>
+                  {user?.loginInfo?.userRoleId?.role === "Buyer" && (
+                     <button
+                     onClick={() => navigate(`/Task/${user?.user?._id}`)}
+                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                   >
+                     Task Mangement
+                   </button>
+                  )}
+
+                  {user?.loginInfo?.userRoleId?.role === "Freelancer" && (
+                    <button
+                      onClick={() => navigate("/freelancer/profiles")}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    >
+                      Profiles
+                    </button>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"

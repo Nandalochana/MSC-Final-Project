@@ -7,13 +7,19 @@ import { DeleteProfileResponseSchema, ProfilesSchema, UserProfileAddRequestSchem
 const GetAllProfilesRequest = z.void();
 const GetAllProfilesResponse = ProfilesSchema;
 
-const GetAllUserProfilesRequest = z.void();
+const GetAllUserProfilesRequest = z.object({
+  userId: z.string(),
+});
+
 const GetAllUserProfilesResponse = UserProfilesSchema;
 
 const UserProfileAddRequest = UserProfileAddRequestSchema;
 const UserProfileAddResponse = UserProfileAddResponseSchema;
 
-const DeleteUserProfileRequest = z.string();
+const DeleteUserProfileRequest = z.object({
+  userProfileId: z.string(),
+});
+
 const DeleteUserProfileResponse = DeleteProfileResponseSchema;
 
 
@@ -33,7 +39,7 @@ const getAllUserProfiles = api<
   z.infer<typeof GetAllUserProfilesRequest>,
   z.infer<typeof GetAllUserProfilesResponse>
 >({
-  path: API_ENDPOINT.USER_PROFILE,
+  path:  (params) => `${API_ENDPOINT.USER_PROFILE_PER_USER}/${params.userId}`,
   method: "GET",
   requestSchema: GetAllUserProfilesRequest,
   responseSchema: GetAllUserProfilesResponse,
@@ -56,7 +62,7 @@ const deleteUserProfile = api<
   z.infer<typeof DeleteUserProfileResponse>
 >({
   method: "DELETE",
-  path: API_ENDPOINT.USER_PROFILE_DELETE,
+  path:  (params) => `${API_ENDPOINT.USER_PROFILE}/${params.userProfileId}`,
   requestSchema: DeleteUserProfileRequest,
   responseSchema: DeleteUserProfileResponse,
   type: "private"
