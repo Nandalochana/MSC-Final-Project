@@ -1,55 +1,70 @@
-import React from 'react';
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
-import ReactStars from 'react-rating-stars-component';
-import fallbackImage from '../../../assets/avatar.svg';
-
-// interface Service {
-//   name: string;
-//   description: string;
-// }
-
-// interface Seller {
-//   profileName: string;
-//   email: string;
-//   phone: string;
-//   profileImage: string | null; // Could be null if no image provided
-//   services: Service[];
-//   rating: number;
-// }
-
-// interface ProfileViewProps {
-//   seller: Seller;
-// }
+import React from "react";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import ReactStars from "react-rating-stars-component";
+import fallbackImage from "../../../assets/avatar.svg";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { UserDetailsAPI } from "../../UserSettings/api/query-slice";
+import { ProfileAPI } from "../../ProfileManager/api/query-slice";
+import UserProfiles from "./components/UserProfiles";
+import { Tabs } from "antd";
+import TabPane from "antd/es/tabs/TabPane";
+import CalendarView from "./components/CalendarView";
 
 const FreelancerProfileView: React.FC = () => {
+  const params = useParams();
 
-    const seller = {
-        profileName: "John Doe",
-        email: "john@example.com",
-        phone: "+1234567890",
-        profileImage: "/path-to-image.jpg", // Optional, defaults to fallbackImage
-        rating: 4.5,
-        services: [
-          {
-            name: "Web Development",
-            description: "Building custom websites with modern technologies."
-          },
-          {
-            name: "SEO Optimization",
-            description: "Improving search engine rankings for your website."
-          },
-          {
-            name: "Web Development",
-            description: "Building custom websites with modern technologies."
-          },
-          {
-            name: "SEO Optimization",
-            description: "Improving search engine rankings for your website."
-          },
-        ]
-      };
+  // Fetch user details
+  const {
+    data: userDetails,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["userDetails", params?.id],
+    enabled: !!params?.id,
+    queryFn: () =>
+      UserDetailsAPI.getUserDetails({ userId: params?.id as string }),
+  });
 
-      
+  // Fetch user profiles
+  const {
+    data: userProfiles = [],
+    isLoading: isUserProfilesLoading,
+    isError: isUserProfilesError,
+    error: userProfilesError,
+  } = useQuery({
+    queryKey: ["userProfiles"],
+    queryFn: () => ProfileAPI.getAllUserProfiles({ userId: params?.id || "" }),
+  });
+
+  if (isLoading || isUserProfilesLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <p className="text-gray-700 font-medium">
+            Page is loading, please wait...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || isUserProfilesError) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <p className="text-red-600 font-semibold">
+            Oops! Something went wrong.
+          </p>
+          <p className="text-gray-700">
+            {error?.message || userProfilesError?.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto min-h-screen">
@@ -59,53 +74,64 @@ const FreelancerProfileView: React.FC = () => {
       </section>
 
       <div className="max-w-7xl mx-auto py-12 px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Profile Card */}
-        <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
-          <img
-            src={fallbackImage}
-            alt={seller.profileName}
-            className="h-32 w-32 object-cover rounded-full mb-4"
-          />
-          <h2 className="text-2xl font-semibold text-gray-800">{seller.profileName}</h2>
-          <p className="text-sm text-gray-500 mb-2">{seller.email}</p>
-          <p className="text-sm text-gray-500">{seller.phone}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Profile Card */}
+          <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center gap-2">
+            <img
+              src={fallbackImage}
+              alt={userDetails?.data.firstName}
+              className="h-32 w-32 object-cover rounded-full mb-4"
+            />
+            <h2 className="text-2xl font-semibold text-gray-800">
+              {userDetails?.data.firstName}
+            </h2>
+            <p className="text-base text-gray-500 mb-2">
+              {userDetails?.data.mobileNr}
+            </p>
+            <p className="text-base text-gray-500">
+              {userDetails?.data.address1}
+            </p>
 
-          {/* Rating Component */}
-          <ReactStars
-            count={5}
-            value={seller.rating}
-            size={16}
-            activeColor="#FF8A00"
-            isHalf={true}
-            edit={false}
-            emptyIcon={<FaRegStar className="text-[#FF8A00]" />}
-            halfIcon={<FaStarHalfAlt />}
-            filledIcon={<FaStar />}
-          />
-        </div>
+            {/* Rating Component */}
+            <ReactStars
+              count={5}
+              // value={seller.rating}
+              size={16}
+              activeColor="#FF8A00"
+              isHalf={true}
+              edit={false}
+              emptyIcon={<FaRegStar className="text-[#FF8A00]" />}
+              halfIcon={<FaStarHalfAlt />}
+              filledIcon={<FaStar />}
+            />
+          </div>
 
-        {/* Seller Services */}
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Services</h3>
-          <div className="space-y-4">
-            {seller.services.map((service, index) => (
-              <div
-                key={index}
-                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
-              >
-                <h4 className="text-lg font-medium text-gray-800">{service.name}</h4>
-                <p className="text-sm text-gray-600">{service.description}</p>
-              </div>
-            ))}
+          {/* Services and Booking Tabs */}
+          <div className="bg-white rounded-lg shadow-lg col-span-2">
+            <Tabs defaultActiveKey="services" className="p-4">
+              <TabPane tab="Services" key="services">
+                <div className="space-y-4 overflow-y-auto h-80">
+                  {Array.isArray(userProfiles) ||
+                  userProfiles?.data.length === 0 ? (
+                    <p className="text-gray-500">No profiles added yet.</p>
+                  ) : (
+                    <UserProfiles
+                      profiles={userProfiles.data}
+                      isLoading={isUserProfilesLoading}
+                    />
+                  )}
+                </div>
+              </TabPane>
+              <TabPane tab="Book Appointment" key="booking">
+                <div className="h-[600px] overflow-y-auto">
+                  {userDetails && <CalendarView userDetails={userDetails} />}
+                </div>
+              </TabPane>
+            </Tabs>
           </div>
         </div>
       </div>
     </div>
-    </div>
-
-
-  
   );
 };
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { UserDetailsAPI } from "../../../UserSettings/api/query-slice";
-import TaskList from "../../../UserSettings/components/TaskList";
+import TaskItem from "../../../UserSettings/components/TaskItem";
 import { FC } from "react";
 
 export const FreelancerDashboard: FC = () => {
@@ -52,9 +52,9 @@ export const FreelancerDashboard: FC = () => {
             {Array.isArray(tasks) || tasks?.data.length === 0 ? (
               <p className="text-gray-500">No tasks added yet.</p>
             ) : (
-              <div className="flex flex-wrap gap-4">
-                <TaskList tasks={tasks.data} isLoading={isTasksLoading} />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <TaskItem tasks={tasks.data} isLoading={isTasksLoading} />
+                </div>
             )}
           </div>
         </div>

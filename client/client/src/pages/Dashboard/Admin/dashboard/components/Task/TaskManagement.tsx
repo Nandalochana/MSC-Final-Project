@@ -12,6 +12,7 @@ const TaskManagement: React.FC = () => {
 
   console.log("API response data:", data);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tasks = data.data.map((task: any) => ({
     id: task._id,
     title: task.title,

@@ -14,6 +14,10 @@ import FreelancerProfileView from "../pages/Dashboard/Buyer/FreelancerProfileVie
 import UserProfilePage from "../pages/UserSettings/UserProfilePage";
 import { Admin } from "../pages/Dashboard/Admin/Admin";
 import TaskPage from "../pages/UserSettings/components/TaskPage";
+import TaskDetailPage from "../pages/TaskDetail/TaskDetailPage";
+import BookingCalendar from "../pages/BookingCalendar/page";
+import PastBookingsPage from "../pages/PastBookings/page";
+import UpcommingBookingsPage from "../pages/UpcomingBookings/page";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +51,38 @@ export const router = createBrowserRouter([
           <RoleBasedRoute allowedRole="Freelancer">
             <CategoriesPage />
           </RoleBasedRoute>
+        ),
+      },
+      {
+        path: Routes.CALENDAR,
+        element: (
+          <RoleBasedRoute allowedRole="Freelancer">
+            <BookingCalendar />
+          </RoleBasedRoute>
+        ),
+      },
+      {
+        path: Routes.COMPLTED_BOOKINGS,
+        element: (
+          <PrivateRoute>
+            <PastBookingsPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: Routes.UPCOMING_BOOKINGS,
+        element: (
+          <PrivateRoute>
+            <UpcommingBookingsPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: Routes.TASK_DETAIL,
+        element: (
+          <PrivateRoute>
+            <TaskDetailPage />
+          </PrivateRoute>
         ),
       },
       {

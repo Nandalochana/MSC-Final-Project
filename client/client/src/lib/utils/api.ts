@@ -22,7 +22,7 @@ export function api<Request, Response>({
     requestSchema.parse(requestData);
 
     // Determine the API URL
-    let url = typeof path === "function" ? path(requestData) : path;
+    const url = typeof path === "function" ? path(requestData) : path;
 
     // Define API call payload
     let data = null;
@@ -35,7 +35,7 @@ export function api<Request, Response>({
     }
 
     console.log("API Call:", { url, method, params, data });
-    url = "http://localhost:3000/" + url;
+
     const config: AxiosRequestConfig = {
       method,
       url,

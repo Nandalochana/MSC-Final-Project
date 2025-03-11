@@ -1,18 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Table, Select } from "antd";
-import { TaskUpdateInfoSchemaType, TaskDeleteInfoSchemaType } from "./api/schema";
-import { ErrorResponse } from "react-router";
-import { AxiosError } from "axios";
-import { TaskManagementAPI } from "./api/query-slice";
 import { useState } from "react";
-
-interface UpdateTaskInput {
-  taskId: string;
-}
-
-interface DeleteTaskInput {
-  taskId: string;
-}
+import { useDeleteTask, useUpdateTask } from "./api/query";
 
 enum TaskStatus {
   Active = "active",
@@ -33,40 +21,6 @@ interface Task {
 
 interface TaskTableProps {
   tasks: Task[];
-}
-
-export function useUpdateTask() {
-  const queryClient = useQueryClient();
-
-  return useMutation<TaskUpdateInfoSchemaType, AxiosError<ErrorResponse>, UpdateTaskInput>({
-    mutationFn: async (data: UpdateTaskInput) => {
-      await TaskManagementAPI.UpdateTaskStatus({ taskId: data.taskId });
-      return { taskId: data.taskId };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-    onError: (error) => {
-      console.error("Error updating task status:", error.response?.data);
-    },
-  });
-}
-
-export function useDeleteTask() {
-  const queryClient = useQueryClient();
-
-  return useMutation<TaskDeleteInfoSchemaType, AxiosError<ErrorResponse>, DeleteTaskInput>({
-    mutationFn: async (data: DeleteTaskInput) => {
-      await TaskManagementAPI.DeleteTask({ taskId: data.taskId });
-      return { taskId: data.taskId };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-    onError: (error) => {
-      console.error("Error deleting task:", error.response?.data);
-    },
-  });
 }
 
 export default function TaskTable({ tasks }: TaskTableProps) {

@@ -6,7 +6,7 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { useUserStore } from "../../../store/user-store";
 import { useCreateTask } from "../api/query";
 import { UserDetailsAPI } from "../api/query-slice";
-import TaskList from "./TaskList";
+import TaskItem from "./TaskItem";
 
 
 // Zod Schema for Form Validation
@@ -128,10 +128,8 @@ const TaskForm: React.FC = () => {
         {Array.isArray(tasks) || tasks?.data.length === 0 ? (
           <p className="text-gray-500">No tasks added yet.</p>
         ) : (
-          <div className="">
-            <div className="flex flex-wrap gap-4">
-              <TaskList tasks={tasks.data} isLoading={isTasksLoading} />
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              <TaskItem tasks={tasks.data} isLoading={isTasksLoading} />
           </div>
         )}
 

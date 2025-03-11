@@ -35,7 +35,7 @@ const DeleteTask = api<
   z.infer<typeof TaskDeleteInfoRequest>,
   z.infer<typeof TaskDeleteResponseResponse>
 >({
-  path: (params) => `${API_ENDPOINT.TASK}/${params.taskId}`,
+  path: (params) => `${API_ENDPOINT.TASKS}/${params.taskId}`,
   method: "DELETE",
   requestSchema: TaskDeleteInfoRequest,
   responseSchema: TaskDeleteResponseSchema,

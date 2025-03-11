@@ -58,8 +58,6 @@ export function useDeleteProfile() {
       return ProfileAPI.deleteUserProfile({ userProfileId: profileId}); 
     },
     onSuccess: (_, profileId) => {
-      // Update the userProfiles query cache to remove the deleted profile
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(["userProfiles"], (oldData: any) => {
         if (!oldData?.data) return oldData;
         return {
@@ -67,8 +65,6 @@ export function useDeleteProfile() {
           data: oldData.data.filter((profile: { _id: string }) => profile._id !== profileId),
         };
       });
-
-      // Optionally, invalidate the query to ensure data is refreshed
       queryClient.invalidateQueries({ queryKey: ["userProfiles"] });
     },
     onError: (error) => {

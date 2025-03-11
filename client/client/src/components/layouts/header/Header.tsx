@@ -1,15 +1,14 @@
 import { Link, useNavigate } from "react-router";
 import { useUserStore } from "../../../store/user-store";
-import { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
 import { useLogOut } from "../../../services/logout/api";
 import { Routes } from "../../../lib/utils/routes-constants";
+import { Dropdown, Menu, Button as AntButton } from "antd";
 
 export const Header = () => {
   const { user } = useUserStore();
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const { removeCredentials } = useUserStore();
   const logoutMutation = useLogOut();
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ export const Header = () => {
     logoutMutation.mutate();
     removeCredentials();
     navigate(Routes.SIGNIN);
-    setDropdownOpen(false);
   };
 
   const handleDashboardRedirect = () => {
@@ -29,25 +27,7 @@ export const Header = () => {
     } else if (user?.loginInfo?.userRoleId?.role === "Admin") {
       navigate("/admin");
     }
-    setDropdownOpen(false);
   };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   // Change header background on scroll
   useEffect(() => {
@@ -64,6 +44,49 @@ export const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const bookingsMenu = (
+    <Menu>
+      <Menu.Item key="completed" onClick={() => navigate("/bookings/completed")}>
+        Completed
+      </Menu.Item>
+      <Menu.Item key="upcoming" onClick={() => navigate("/bookings/upcoming")}>
+        Upcoming
+      </Menu.Item>
+    </Menu>
+  );
+
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="dashboard" onClick={handleDashboardRedirect}>
+        Dashboard
+      </Menu.Item>
+      <Menu.Item key="settings" onClick={() => navigate(`/settings/${user?.user?._id}`)}>
+        Settings
+      </Menu.Item>
+      {user?.loginInfo?.userRoleId?.role === "Buyer" && (
+        <Menu.Item key="task" onClick={() => navigate(`/task`)}>
+          Task Management
+        </Menu.Item>
+      )}
+      {user?.loginInfo?.userRoleId?.role === "Freelancer" && (
+        <>
+          <Menu.Item key="profiles" onClick={() => navigate("/freelancer/profiles")}>
+            Profiles
+          </Menu.Item>
+          <Menu.Item key="calendar" onClick={() => navigate("/calendar")}>
+            Calendar
+          </Menu.Item>
+        </>
+      )}
+          <Menu.SubMenu key="bookings" title="All Bookings" popupOffset={[0, 0]} popupClassName="ant-dropdown-menu-submenu-popup">
+            {bookingsMenu}
+          </Menu.SubMenu>
+      <Menu.Item key="logout" onClick={handleLogout} className="logout-menu-item">
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div
@@ -96,56 +119,14 @@ export const Header = () => {
         {/* User Dropdown */}
         <div>
           {user?.accessToken ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                className="text-black text-base font-bold rounded-3xl"
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
-              >
+            <Dropdown overlay={userMenu} trigger={['click']}>
+              <AntButton className="text-black text-base font-bold rounded-3xl">
                 <div className="flex items-center gap-2">
                   {user?.user?.firstName || "User"}
-                  {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                  <IoIosArrowDown />
                 </div>
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg w-40">
-                  <button
-                    onClick={handleDashboardRedirect}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={() => navigate(`/settings/${user?.user?._id}`)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    Settings
-                  </button>
-                  {user?.loginInfo?.userRoleId?.role === "Buyer" && (
-                     <button
-                     onClick={() => navigate(`/Task/${user?.user?._id}`)}
-                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                   >
-                     Task Mangement
-                   </button>
-                  )}
-
-                  {user?.loginInfo?.userRoleId?.role === "Freelancer" && (
-                    <button
-                      onClick={() => navigate("/freelancer/profiles")}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                    >
-                      Profiles
-                    </button>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
+              </AntButton>
+            </Dropdown>
           ) : (
             <Link to="/sign-in">
               <button className="bg-blue-700 text-white px-4 py-2 text-sm font-semibold rounded-3xl">
