@@ -3,7 +3,7 @@ const Profile = require('../models/profile');
 class ProfileController {
     async getProfiles(req, res) {
         const profiles = await Profile.find();
-        res.status(200).json(profiles);
+        res.status(200).json({data: profiles});
     }
 
     async getProfileById(req, res) {

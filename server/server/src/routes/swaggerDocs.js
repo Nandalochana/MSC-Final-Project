@@ -35,6 +35,467 @@
  *     description: User authentication
  *   - name: Analyse
  *     description: Analyse location information
+ *   - name: Search
+ *     description: Search management
+ *   - name: FreelancerTimeSlots
+ *     description: Freelancer time slot management
+ *   - name: BookingSlots
+ *     description: API for managing booking slots 
+ *   - name: TaskOffereds
+ *     description: Task offered management
+ *   - name: Ratings
+ *     description: API for managing ratings
+ */
+
+/**
+ * @swagger
+ * /bookingSlots:
+ *   post:
+ *     summary: Create a new booking slot
+ *     tags: [BookingSlots]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - freelancerSlotId
+ *               - userId
+ *               - buyerId
+ *               - startTime
+ *               - endTime
+ *               - hourlyRate
+ *               - totalPrice
+ *             properties:
+ *               freelancerSlotId:
+ *                 type: string
+ *                 description: ID of the freelancer time slot
+ *               userId:
+ *                 type: string
+ *                 description: ID of the user who created the booking slot
+ *               buyerId:
+ *                 type: string
+ *                 description: ID of the buyer who booked the slot
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Start time of the booking slot
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: End time of the booking slot
+ *               hourlyRate:
+ *                 type: number
+ *                 description: Hourly rate for the booking slot
+ *               totalPrice:
+ *                 type: number
+ *                 description: Total price for the booking slot
+ *     responses:
+ *       201:
+ *         description: Booking slot created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/{id}:
+ *   put:
+ *     summary: Update a booking slot
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Booking slot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BookingSlot'
+ *     responses:
+ *       200:
+ *         description: Booking slot updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Booking slot not found
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/{id}:
+ *   delete:
+ *     summary: Delete a booking slot
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Booking slot ID
+ *     responses:
+ *       200:
+ *         description: Booking slot deleted successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Booking slot not found
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/user/{userId}:
+ *   get:
+ *     summary: Get booking slots by user ID
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/buyer/{buyerId}:
+ *   get:
+ *     summary: Get booking slots by buyer ID
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: buyerId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Buyer ID
+ *     responses:
+ *       200:
+ *         description: List of booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/user/past:
+ *   post:
+ *     summary: Get past booking slots by user ID
+ *     tags: [BookingSlots]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: User ID
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date to compare
+ *     responses:
+ *       200:
+ *         description: List of past booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/user/future:
+ *   post:
+ *     summary: Get future booking slots by user ID
+ *     tags: [BookingSlots]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: User ID
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date to compare
+ *     responses:
+ *       200:
+ *         description: List of future booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/buyer/past:
+ *   post:
+ *     summary: Get past booking slots by buyer ID
+ *     tags: [BookingSlots]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               buyerId:
+ *                 type: string
+ *                 description: Buyer ID
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date to compare
+ *     responses:
+ *       200:
+ *         description: List of past booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/buyer/future:
+ *   post:
+ *     summary: Get future booking slots by buyer ID
+ *     tags: [BookingSlots]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               buyerId:
+ *                 type: string
+ *                 description: Buyer ID
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date to compare
+ *     responses:
+ *       200:
+ *         description: List of future booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots:
+ *   get:
+ *     summary: Get all booking slots
+ *     tags: [BookingSlots]
+ *     responses:
+ *       200:
+ *         description: List of booking slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/{id}/buyerStatus:
+ *   put:
+ *     summary: Update the buyer status of a booking slot
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Booking slot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, CANCELLED]
+ *                 description: New buyer status
+ *     responses:
+ *       200:
+ *         description: Buyer status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Booking slot not found
+ */
+
+/**
+ * @swagger
+ * /bookingSlots/{id}/freelancerStatus:
+ *   put:
+ *     summary: Update the freelancer status of a booking slot
+ *     tags: [BookingSlots]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Booking slot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, CANCELLED]
+ *                 description: New freelancer status
+ *     responses:
+ *       200:
+ *         description: Freelancer status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingSlot'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Booking slot not found
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BookingSlot:
+ *       type: object
+ *       required:
+ *         - freelancerSlotId
+ *         - userId
+ *         - buyerId
+ *         - startTime
+ *         - endTime
+ *         - hourlyRate
+ *         - totalPrice
+ *       properties:
+ *         freelancerSlotId:
+ *           type: string
+ *           description: ID of the freelancer time slot
+ *         userId:
+ *           type: string
+ *           description: ID of the user who created the booking slot
+ *         buyerId:
+ *           type: string
+ *           description: ID of the buyer who booked the slot
+ *         startTime:
+ *           type: string
+ *           format: date-time
+ *           description: Start time of the booking slot
+ *         endTime:
+ *           type: string
+ *           format: date-time
+ *           description: End time of the booking slot
+ *         hourlyRate:
+ *           type: number
+ *           description: Hourly rate for the booking slot
+ *         totalPrice:
+ *           type: number
+ *           description: Total price for the booking slot
+ *     Comment:
+ *       type: object
+ *       required:
+ *         - taskId
+ *         - userId
+ *         - comment
+ *         - totalPrice
+ *         - status
+ *       properties:
+ *         taskId:
+ *           type: string
+ *           description: ID of the task
+ *         userId:
+ *           type: string
+ *           description: ID of the user
+ *         comment:
+ *           type: string
+ *           description: Comment text
+ *         totalPrice:
+ *           type: number
+ *           description: Total price
+ *         status:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE]
+ *           description: Status of the comment
  */
 
 /**
@@ -431,6 +892,60 @@
  *         description: User not found
  */
 
+/**
+ * @swagger
+ * /users/withLoginInfo:
+ *   get:
+ *     summary: Retrieve a list of users with their login information
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users with login information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   address1:
+ *                     type: string
+ *                   address2:
+ *                     type: string
+ *                   address3:
+ *                     type: string
+ *                   telephoneNr:
+ *                     type: string
+ *                   mobileNr:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                   profileImg:
+ *                     type: string
+ *                   loginInfo:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                       userRoleId:
+ *                         type: string
+ *                       userId:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *       500:
+ *         description: Internal server error
+ */
 
 /**
  * @swagger
@@ -455,6 +970,8 @@
  *                   email:
  *                     type: string
  *                   userRoleId:
+ *                     type: string
+ *                   userId:
  *                     type: string
  *                   status:
  *                     type: string
@@ -489,6 +1006,8 @@
  *                   type: string
  *                 userRoleId:
  *                   type: string
+ *                 userId:
+ *                   type: string
  *                 status:
  *                   type: string
  *       404:
@@ -514,6 +1033,8 @@
  *                 type: string
  *               userRoleId:
  *                 type: string
+ *               userId:
+ *                 type: string
  *               status:
  *                 type: string
  *     responses:
@@ -529,6 +1050,8 @@
  *                 email:
  *                   type: string
  *                 userRoleId:
+ *                   type: string
+ *                 userId:
  *                   type: string
  *                 status:
  *                   type: string
@@ -562,6 +1085,8 @@
  *                 type: string
  *               userRoleId:
  *                 type: string
+ *               userId:
+ *                 type: string
  *               status:
  *                 type: string
  *     responses:
@@ -577,6 +1102,8 @@
  *                 email:
  *                   type: string
  *                 userRoleId:
+ *                   type: string
+ *                 userId:
  *                   type: string
  *                 status:
  *                   type: string
@@ -604,6 +1131,51 @@
  *         description: Login information deleted
  *       404:
  *         description: Login information not found
+ */
+
+/**
+ * @swagger
+ * /loginInfo/updateRole:
+ *   post:
+ *     summary: Update the role of a user
+ *     tags: [loginInfo]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *               userId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated login information with new role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 userRoleId:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       400:
+ *         description: Invalid role or input
+ *       404:
+ *         description: Role or LoginInfo not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -1248,6 +1820,41 @@
 
 /**
  * @swagger
+ * /userProfiles/user/{userId}:
+ *   get:
+ *     summary: Retrieve user profiles by user ID
+ *     tags: [UserProfiles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A list of user profiles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   profileId:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *       404:
+ *         description: User profiles not found
+ */
+
+/**
+ * @swagger
  * /tasks:
  *   get:
  *     summary: Retrieve a list of tasks
@@ -1450,6 +2057,90 @@
 
 /**
  * @swagger
+ * /tasks/userId:
+ *   get:
+ *     summary: Retrieve tasks by user ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   createdUserId:
+ *                     type: string
+ *                   createdDate:
+ *                     type: string
+ *                     format: date-time
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *       404:
+ *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /tasks/toggleStatus/{id}:
+ *   put:
+ *     summary: Toggle the status of a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: The updated task with toggled status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 createdUserId:
+ *                   type: string
+ *                 createdDate:
+ *                   type: string
+ *                   format: date-time
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
  * /taskProfiles:
  *   get:
  *     summary: Retrieve a list of task profiles
@@ -1510,7 +2201,6 @@
  *                 requiredLevel:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Task profile not found
  */
@@ -1605,7 +2295,6 @@
  *                 requiredLevel:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Task profile not found
  */
@@ -1727,7 +2416,6 @@
  *                 userId:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: User location info not found
  */
@@ -1772,7 +2460,6 @@
  *                 userId:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -1822,7 +2509,6 @@
  *                 userId:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: User location info not found
  */
@@ -1876,7 +2562,6 @@
  *                   taskId:
  *                     type: string
  *                   status:
- *                     type: string
  */
 
 /**
@@ -1911,7 +2596,6 @@
  *                 taskId:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Task location info not found
  */
@@ -1938,7 +2622,6 @@
  *               taskId:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       201:
  *         description: The created task location info
@@ -1956,7 +2639,6 @@
  *                 taskId:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -1988,7 +2670,6 @@
  *               taskId:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       200:
  *         description: The updated task location info
@@ -2006,7 +2687,6 @@
  *                 taskId:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Task location info not found
  */
@@ -2058,7 +2738,6 @@
  *                   description:
  *                     type: string
  *                   status:
- *                     type: string
  */
 
 /**
@@ -2091,7 +2770,6 @@
  *                 description:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Attachment not found
  */
@@ -2133,7 +2811,6 @@
  *                 description:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -2163,7 +2840,6 @@
  *               description:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       200:
  *         description: The updated attachment
@@ -2179,7 +2855,6 @@
  *                 description:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Attachment not found
  */
@@ -2231,7 +2906,6 @@
  *                   comment:
  *                     type: string
  *                   status:
- *                     type: string
  */
 
 /**
@@ -2264,7 +2938,6 @@
  *                 comment:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Comment not found
  */
@@ -2275,21 +2948,12 @@
  *   post:
  *     summary: Create a new comment
  *     tags: [Comments]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               taskId:
- *                 type: string
- *               comment:
- *                 type: string
- *               status:
- *                 type: string
+ *             $ref: '#/components/schemas/Comment'
  *     responses:
  *       201:
  *         description: The created comment
@@ -2298,14 +2962,8 @@
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: string
- *                 taskId:
- *                   type: string
- *                 comment:
- *                   type: string
- *                 status:
- *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/Comment'
  */
 
 /**
@@ -2335,7 +2993,6 @@
  *               comment:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       200:
  *         description: The updated comment
@@ -2351,7 +3008,6 @@
  *                 comment:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Comment not found
  */
@@ -2376,6 +3032,44 @@
  *         description: Comment deleted
  *       404:
  *         description: Comment not found
+ */
+
+/**
+ * @swagger
+ * /comments/task/{taskId}:
+ *   get:
+ *     summary: Retrieve comments by task ID
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task ID
+ *     responses:
+ *       200:
+ *         description: A list of comments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   taskId:
+ *                     type: string
+ *                   comment:
+ *                     type: string
+ *                   status:
+ *       404:
+ *         description: Comments not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -2409,7 +3103,6 @@
  *                   taskStatus:
  *                     type: string
  *                   status:
- *                     type: string
  */
 
 /**
@@ -2448,7 +3141,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Employer history not found
  */
@@ -2479,7 +3171,6 @@
  *               taskStatus:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       201:
  *         description: The created employer history
@@ -2501,7 +3192,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -2537,7 +3227,6 @@
  *               taskStatus:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       200:
  *         description: The updated employer history
@@ -2559,7 +3248,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Employer history not found
  */
@@ -2617,7 +3305,6 @@
  *                   taskStatus:
  *                     type: string
  *                   status:
- *                     type: string
  */
 
 /**
@@ -2656,7 +3343,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Employee history not found
  */
@@ -2687,7 +3373,6 @@
  *               taskStatus:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       201:
  *         description: The created employee history
@@ -2709,7 +3394,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -2745,7 +3429,6 @@
  *               taskStatus:
  *                 type: string
  *               status:
- *                 type: string
  *     responses:
  *       200:
  *         description: The updated employee history
@@ -2767,7 +3450,6 @@
  *                 taskStatus:
  *                   type: string
  *                 status:
- *                   type: string
  *       404:
  *         description: Employee history not found
  */
@@ -2821,6 +3503,17 @@
  *               properties:
  *                 token:
  *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
  *       401:
  *         description: Invalid email or password
  */
@@ -2836,6 +3529,59 @@
  *     responses:
  *       200:
  *         description: Logged out successfully
+ */
+
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - password
+ *               - role
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               profileImg:
+ *                 type: string
+ *               address1:
+ *                 type: string
+ *               address2:
+ *                 type: string
+ *               address3:
+ *                 type: string
+ *               telephoneNr:
+ *                 type: string
+ *               mobileNr:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [Admin, Freelancer, Buyer]
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid input or email already exists
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -2889,4 +3635,1059 @@
  *                         type: number
  *       500:
  *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /search/loadAllFreelancersByFilter:
+ *   get:
+ *     summary: Retrieve a list of freelancers with filters
+ *     tags: [Search]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: firstName
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by first name
+ *       - in: query
+ *         name: lastName
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by last name
+ *       - in: query
+ *         name: profiles
+ *         required: false
+ *         schema:
+ *           type: string
+ *           example: 'GUI,Programming'
+ *         description: Filter by profiles (comma-separated values)
+ *     responses:
+ *       200:
+ *         description: A list of freelancers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   roleId:
+ *                     type: string
+ *                   loginInfo:
+ *                     type: object
+ *                     properties:
+ *                       email:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ */
+
+/**
+ * @swagger
+ * /search/users:
+ *   get:
+ *     summary: Search users by name
+ *     tags: [Search]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The name to search for
+ *     responses:
+ *       200:
+ *         description: A list of users matching the search criteria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   address1:
+ *                     type: string
+ *                   address2:
+ *                     type: string
+ *                   address3:
+ *                     type: string
+ *                   telephoneNr:
+ *                     type: string
+ *                   mobileNr:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /users/toggleStatus/{id}:
+ *   put:
+ *     summary: Toggle the status of a user
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: The updated user with toggled status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 address1:
+ *                   type: string
+ *                 address2:
+ *                   type: string
+ *                 address3:
+ *                   type: string
+ *                 telephoneNr:
+ *                   type: string
+ *                 mobileNr:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                 profileImg:
+ *                   type: string
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots:
+ *   get:
+ *     summary: Retrieve a list of freelancer time slots
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of freelancer time slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   date:
+ *                     type: string
+ *                     format: date
+ *                   available:
+ *                     type: boolean
+ *                   status:
+ *                     type: string
+ *                   timeSlotStatus:
+ *                     type: string
+ *                     enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *                   timeSlots:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         start:
+ *                           type: string
+ *                         end:
+ *                           type: string
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots/{id}:
+ *   get:
+ *     summary: Retrieve a single freelancer time slot by ID
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The freelancer time slot ID
+ *     responses:
+ *       200:
+ *         description: A single freelancer time slot
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 date:
+ *                   type: string
+ *                   format: date
+ *                 available:
+ *                   type: boolean
+ *                 status:
+ *                   type: string
+ *                 timeSlotStatus:
+ *                   type: string
+ *                   enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *                 timeSlots:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       start:
+ *                         type: string
+ *                       end:
+ *                         type: string
+ *       404:
+ *         description: Freelancer time slot not found
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots:
+ *   post:
+ *     summary: Create a new freelancer time slot
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date
+ *               available:
+ *                 type: boolean
+ *               status:
+ *                 type: string
+ *               timeSlotStatus:
+ *                 type: string
+ *                 enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *               timeSlots:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     start:
+ *                       type: string
+ *                     end:
+ *                       type: string
+ *     responses:
+ *       201:
+ *         description: The created freelancer time slot
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 date:
+ *                   type: string
+ *                   format: date
+ *                 available:
+ *                   type: boolean
+ *                 status:
+ *                   type: string
+ *                 timeSlotStatus:
+ *                   type: string
+ *                   enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *                 timeSlots:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       start:
+ *                         type: string
+ *                       end:
+ *                         type: string
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots/{id}:
+ *   put:
+ *     summary: Update a freelancer time slot by ID
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The freelancer time slot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date
+ *               available:
+ *                 type: boolean
+ *               status:
+ *                 type: string
+ *               timeSlotStatus:
+ *                 type: string
+ *                 enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *               timeSlots:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     start:
+ *                       type: string
+ *                     end:
+ *                       type: string
+ *     responses:
+ *       200:
+ *         description: The updated freelancer time slot
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 date:
+ *                   type: string
+ *                   format: date
+ *                 available:
+ *                   type: boolean
+ *                 status:
+ *                   type: string
+ *                 timeSlotStatus:
+ *                   type: string
+ *                   enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *                 timeSlots:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       start:
+ *                         type: string
+ *                       end:
+ *                         type: string
+ *       404:
+ *         description: Freelancer time slot not found
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots/{id}:
+ *   delete:
+ *     summary: Delete a freelancer time slot by ID
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The freelancer time slot ID
+ *     responses:
+ *       200:
+ *         description: Freelancer time slot deleted
+ *       404:
+ *         description: Freelancer time slot not found
+ */
+
+/**
+ * @swagger
+ * /freelancerTimeSlots/slot/search:
+ *   get:
+ *     summary: Search for freelancer time slots
+ *     tags: [FreelancerTimeSlots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by user ID
+ *       - in: query
+ *         name: date
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter by date
+ *     responses:
+ *       200:
+ *         description: A list of freelancer time slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   date:
+ *                     type: string
+ *                     format: date
+ *                   available:
+ *                     type: boolean
+ *                   status:
+ *                     type: string
+ *                   timeSlotStatus:
+ *                     type: string
+ *                     enum: [Available, Unavailable, Deleted, Marked_As_Allocated]
+ *                   timeSlots:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         start:
+ *                           type: string
+ *                         end:
+ *                           type: string
+ */
+
+/**
+ * @swagger
+ * /taskOffereds:
+ *   post:
+ *     summary: Create a new task offered
+ *     tags: [TaskOffereds]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - taskId
+ *               - offerUserId
+ *               - commentId
+ *             properties:
+ *               taskId:
+ *                 type: string
+ *                 description: ID of the task
+ *               offerUserId:
+ *                 type: string
+ *                 description: ID of the user making the offer
+ *               commentId:
+ *                 type: string
+ *                 description: ID of the comment
+ *     responses:
+ *       201:
+ *         description: The created task offered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TaskOffered'
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/{id}:
+ *   put:
+ *     summary: Update a task offered by ID
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task offered ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TaskOffered'
+ *     responses:
+ *       200:
+ *         description: The updated task offered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TaskOffered'
+ *       404:
+ *         description: Task offered not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/{id}/freelancerStatus:
+ *   put:
+ *     summary: Update the freelancer status of a task offered
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task offered ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, CANCELLED]
+ *                 description: New freelancer status
+ *     responses:
+ *       200:
+ *         description: Freelancer status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TaskOffered'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Task offered not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/{id}/buyerStatus:
+ *   put:
+ *     summary: Update the buyer status of a task offered
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task offered ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, CANCELLED]
+ *                 description: New buyer status
+ *     responses:
+ *       200:
+ *         description: Buyer status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TaskOffered'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Task offered not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/{id}:
+ *   delete:
+ *     summary: Delete a task offered by ID
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The task offered ID
+ *     responses:
+ *       200:
+ *         description: Task offered deleted
+ *       404:
+ *         description: Task offered not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds:
+ *   get:
+ *     summary: Search for task offereds
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: query
+ *         name: taskId
+ *         schema:
+ *           type: string
+ *         description: Filter by task ID
+ *       - in: query
+ *         name: offerUserId
+ *         schema:
+ *           type: string
+ *         description: Filter by offer user ID
+ *     responses:
+ *       200:
+ *         description: A list of task offereds
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TaskOffered'
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/offerUser/{offerUserId}:
+ *   get:
+ *     summary: Get tasks by offer user ID
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: offerUserId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Offer user ID
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TaskOffered'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/createdUser/{createdUserId}:
+ *   get:
+ *     summary: Get tasks by created user ID
+ *     tags: [TaskOffereds]
+ *     parameters:
+ *       - in: path
+ *         name: createdUserId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Created user ID
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /ratings:
+ *   get:
+ *     summary: Retrieve a list of all ratings
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of ratings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   buyerId:
+ *                     type: string
+ *                   freelancerId:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   taskOrBookingId:
+ *                     type: string
+ *       404:
+ *         description: Ratings not found
+ */
+
+/**
+ * @swagger
+ * /ratings/{id}:
+ *   get:
+ *     summary: Retrieve a single rating by ID
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The rating ID
+ *     responses:
+ *       200:
+ *         description: A single rating
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 buyerId:
+ *                   type: string
+ *                 freelancerId:
+ *                   type: string
+ *                 type:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskOrBookingId:
+ *                   type: string
+ *       404:
+ *         description: Rating not found
+ */
+
+/**
+ * @swagger
+ * /ratings:
+ *   post:
+ *     summary: Create a new rating
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - buyerId
+ *               - freelancerId
+ *               - type
+ *               - rating
+ *               - taskOrBookingId
+ *             properties:
+ *               buyerId:
+ *                 type: string
+ *               freelancerId:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskOrBookingId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: The created rating
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 buyerId:
+ *                   type: string
+ *                 freelancerId:
+ *                   type: string
+ *                 type:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskOrBookingId:
+ *                   type: string
+ */
+
+/**
+ * @swagger
+ * /ratings/{id}:
+ *   put:
+ *     summary: Update a rating by ID
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The rating ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               buyerId:
+ *                 type: string
+ *               freelancerId:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               rating:
+ *                 type: number
+ *               taskOrBookingId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The updated rating
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 buyerId:
+ *                   type: string
+ *                 freelancerId:
+ *                   type: string
+ *                 type:
+ *                   type: string
+ *                 rating:
+ *                   type: number
+ *                 taskOrBookingId:
+ *                   type: string
+ *       404:
+ *         description: Rating not found
+ */
+
+/**
+ * @swagger
+ * /ratings/{id}:
+ *   delete:
+ *     summary: Delete a rating by ID
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The rating ID
+ *     responses:
+ *       200:
+ *         description: Rating deleted
+ *       404:
+ *         description: Rating not found
+ */
+
+/**
+ * @swagger
+ * /ratings/buyer/{buyerId}:
+ *   get:
+ *     summary: Retrieve ratings by buyer ID
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: buyerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The buyer ID
+ *     responses:
+ *       200:
+ *         description: A list of ratings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   buyerId:
+ *                     type: string
+ *                   freelancerId:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   taskOrBookingId:
+ *                     type: string
+ *       404:
+ *         description: Ratings not found
+ */
+
+/**
+ * @swagger
+ * /ratings/freelancer/{freelancerId}:
+ *   get:
+ *     summary: Retrieve ratings by freelancer ID
+ *     tags: [Ratings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: freelancerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The freelancer ID
+ *     responses:
+ *       200:
+ *         description: A list of ratings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   buyerId:
+ *                     type: string
+ *                   freelancerId:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                   rating:
+ *                     type: number
+ *                   taskOrBookingId:
+ *                     type: string
+ *       404:
+ *         description: Ratings not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/offerUser/{offerUserId}:
+ *   get:
+ *     summary: Get tasks by offer user ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: offerUserId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Offer user ID
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TaskOffered'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /taskOffereds/createdUser/{createdUserId}:
+ *   get:
+ *     summary: Get tasks by created user ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: createdUserId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Created user ID
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Tasks not found
  */

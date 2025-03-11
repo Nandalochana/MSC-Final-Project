@@ -1,41 +1,62 @@
 {
-  "name": "client",
-  "version": "1.0.0",
+  "name": "msc-project-client",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "cypress open"
   },
   "dependencies": {
+    "@chakra-ui/react": "^3.7.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hookform/error-message": "^2.0.1",
+    "@hookform/resolvers": "^3.10.0",
     "@react-google-maps/api": "^2.20.5",
-    "dotenv": "^16.4.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3"
+    "@storybook/react": "^8.6.4",
+    "@tanstack/react-query": "^5.64.0",
+    "@tanstack/react-query-devtools": "^5.64.0",
+    "antd": "^5.23.4",
+    "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "date-fns": "^4.1.0",
+    "drizzle-zod": "^0.7.0",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "react-icons": "^5.4.0",
+    "react-rating-stars-component": "^2.2.0",
+    "react-router": "^7.1.1",
+    "react-router-dom": "^7.1.1",
+    "react-select": "^5.9.0",
+    "tailwind-merge": "^2.6.0",
+    "yup": "^1.6.1",
+    "zod": "^3.24.1",
+    "zod-formik-adapter": "^1.3.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.2",
-    "typescript": "^4.1.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "@eslint/js": "^9.17.0",
+    "@types/cypress": "^1.1.6",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.20",
+    "cypress": "^14.1.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5"
   }
 }

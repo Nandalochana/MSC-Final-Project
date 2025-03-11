@@ -11,10 +11,15 @@ const UserLocationInfoController = require('../controllers/userLocationInfoContr
 const TaskLocationInfoController = require('../controllers/taskLocationInfoController');
 const { AttachmentController, upload: attachmentUpload } = require('../controllers/attachmentController');
 const CommentController = require('../controllers/commentController');
-const EmployerHistoryController = require('../controllers/employerHistoryController');
 const authenticateJWT = require('../middleware/authMiddleware');
-const EmployeeHistoryController = require('../controllers/employeeHistoryController');
+const EmployeeHistoryController = require('../controllers/employeehistoryController');
 const { analyzeRatings } = require('../controllers/analysisController');
+const SearchController = require('../controllers/SearchController');
+const FreelancerTimeSlotController = require('../controllers/freelancerTimeSlotController');
+const EmployerHistoryController = require('../controllers/employerHistoryController');
+const BookingSlotsController = require('../controllers/bookingSlotsController');
+const TaskOfferedController = require('../controllers/taskOfferedController');
+const RatingController = require('../controllers/ratingController');
 
 function setRoutes(app) {
     const roleController = new RoleController();
@@ -29,6 +34,7 @@ function setRoutes(app) {
     app.get('/loginInfo/:id', authenticateJWT, loginInfoController.getLoginInfoById.bind(loginInfoController));
     app.post('/loginInfo', authenticateJWT, loginInfoController.createLoginInfo.bind(loginInfoController));
     app.put('/loginInfo/:id', authenticateJWT, loginInfoController.updateLoginInfo.bind(loginInfoController));
+    app.post('/loginInfo/updateRole', authenticateJWT, loginInfoController.updateRole.bind(loginInfoController)); // New route for updating role
     app.delete('/loginInfo/:id', authenticateJWT, loginInfoController.deleteLoginInfo.bind(loginInfoController));
 
     const paymentTypeController = new PaymentTypeController();
@@ -47,9 +53,11 @@ function setRoutes(app) {
 
     const userController = new UserController();
     app.get('/users', authenticateJWT, userController.getUsers.bind(userController));
+    app.get('/users/withLoginInfo', authenticateJWT, userController.getUsersWithLoginInfo.bind(userController));
     app.get('/users/:id', authenticateJWT, userController.getUserById.bind(userController));
     app.post('/users', authenticateJWT, userUpload.single('profileImg'), userController.createUser.bind(userController));
     app.put('/users/:id', authenticateJWT, userUpload.single('profileImg'), userController.updateUser.bind(userController));
+    app.put('/users/toggleStatus/:id', authenticateJWT, userController.toggleUserStatus.bind(userController));
     app.delete('/users/:id', authenticateJWT, userController.deleteUser.bind(userController));
 
     const profileController = new ProfileController();
@@ -62,15 +70,18 @@ function setRoutes(app) {
     const userProfileController = new UserProfileController();
     app.get('/userProfiles', authenticateJWT, userProfileController.getUserProfiles.bind(userProfileController));
     app.get('/userProfiles/:id', authenticateJWT, userProfileController.getUserProfileById.bind(userProfileController));
+    app.get('/userProfiles/user/:userId', authenticateJWT, userProfileController.getUserProfileByUserId.bind(userProfileController));
     app.post('/userProfiles', authenticateJWT, userProfileController.createUserProfile.bind(userProfileController));
     app.put('/userProfiles/:id', authenticateJWT, userProfileController.updateUserProfile.bind(userProfileController));
     app.delete('/userProfiles/:id', authenticateJWT, userProfileController.deleteUserProfile.bind(userProfileController));
 
     const taskController = new TaskController();
     app.get('/tasks', authenticateJWT, taskController.getTasks.bind(taskController));
+    app.get('/tasks/userId', authenticateJWT, taskController.getTaskByUserId.bind(taskController));
     app.get('/tasks/:id', authenticateJWT, taskController.getTaskById.bind(taskController));
     app.post('/tasks', authenticateJWT, taskController.createTask.bind(taskController));
     app.put('/tasks/:id', authenticateJWT, taskController.updateTask.bind(taskController));
+    app.put('/tasks/toggleStatus/:id', authenticateJWT, taskController.toggleTaskStatus.bind(taskController));
     app.delete('/tasks/:id', authenticateJWT, taskController.deleteTask.bind(taskController));
 
     const taskProfileController = new TaskProfileController();
@@ -105,6 +116,7 @@ function setRoutes(app) {
     const commentController = new CommentController();
     app.get('/comments', authenticateJWT, commentController.getComments.bind(commentController));
     app.get('/comments/:id', authenticateJWT, commentController.getCommentById.bind(commentController));
+    app.get('/comments/task/:taskId', authenticateJWT, commentController.getCommentsByTaskId.bind(commentController)); // New route
     app.post('/comments', authenticateJWT, commentController.createComment.bind(commentController));
     app.put('/comments/:id', authenticateJWT, commentController.updateComment.bind(commentController));
     app.delete('/comments/:id', authenticateJWT, commentController.deleteComment.bind(commentController));
@@ -123,9 +135,56 @@ function setRoutes(app) {
     app.put('/employeeHistories/:id', authenticateJWT, employeeHistoryController.updateEmployeeHistory.bind(employeeHistoryController));
     app.delete('/employeeHistories/:id', authenticateJWT, employeeHistoryController.deleteEmployeeHistory.bind(employeeHistoryController));
 
+    const searchController = new SearchController();
+    app.get('/search/loadAllFreelancersByFilter', authenticateJWT, searchController.loadAllFreelancersByFilter.bind(searchController));
+    app.get('/search/users', authenticateJWT, searchController.searchUserByName.bind(searchController));
+
+    const freelancerTimeSlotController = new FreelancerTimeSlotController();
+    app.get('/freelancerTimeSlots', authenticateJWT, freelancerTimeSlotController.getFreelancerTimeSlots.bind(freelancerTimeSlotController));
+    app.get('/freelancerTimeSlots/:id', authenticateJWT, freelancerTimeSlotController.getFreelancerTimeSlotById.bind(freelancerTimeSlotController));
+    app.get('/freelancerTimeSlots/freelancer/:id', authenticateJWT, freelancerTimeSlotController.getTimeSlotsByFreelancerId.bind(freelancerTimeSlotController)); // New route
+    app.post('/freelancerTimeSlots', authenticateJWT, freelancerTimeSlotController.createFreelancerTimeSlot.bind(freelancerTimeSlotController));
+    app.put('/freelancerTimeSlots/:id', authenticateJWT, freelancerTimeSlotController.updateFreelancerTimeSlot.bind(freelancerTimeSlotController));
+    app.delete('/freelancerTimeSlots/:id', authenticateJWT, freelancerTimeSlotController.deleteFreelancerTimeSlot.bind(freelancerTimeSlotController));
+    app.get('/freelancerTimeSlots/slot/search', authenticateJWT, freelancerTimeSlotController.searchFreelancerTimeSlots.bind(freelancerTimeSlotController));
+
+    const bookingSlotsController = new BookingSlotsController();
+    app.post('/bookingSlots', authenticateJWT, bookingSlotsController.createBookingSlot.bind(bookingSlotsController));
+    app.put('/bookingSlots/:id', authenticateJWT, bookingSlotsController.updateBookingSlot.bind(bookingSlotsController));
+    app.delete('/bookingSlots/:id', authenticateJWT, bookingSlotsController.deleteBookingSlot.bind(bookingSlotsController));
+    app.get('/bookingSlots/user/:userId', authenticateJWT, bookingSlotsController.getBookingSlotsByUserId.bind(bookingSlotsController));
+    app.post('/bookingSlots/user/past', authenticateJWT, bookingSlotsController.getBookingSlotsByUserIdPast.bind(bookingSlotsController)); // Updated route
+    app.post('/bookingSlots/user/future', authenticateJWT, bookingSlotsController.getBookingSlotsByUserIdFuture.bind(bookingSlotsController)); // Updated route
+    app.get('/bookingSlots/buyer/:buyerId', authenticateJWT, bookingSlotsController.getBookingSlotsByBuyerId.bind(bookingSlotsController));
+    app.post('/bookingSlots/buyer/past', authenticateJWT, bookingSlotsController.getBookingSlotsByBuyerIdPast.bind(bookingSlotsController)); // Updated route
+    app.post('/bookingSlots/buyer/future', authenticateJWT, bookingSlotsController.getBookingSlotsByBuyerIdFuture.bind(bookingSlotsController)); // Updated route
+    app.get('/bookingSlots', authenticateJWT, bookingSlotsController.getAllBookingSlots.bind(bookingSlotsController));
+    app.put('/bookingSlots/:id/buyerStatus', authenticateJWT, bookingSlotsController.updateBuyerStatus.bind(bookingSlotsController));
+    app.put('/bookingSlots/:id/freelancerStatus', authenticateJWT, bookingSlotsController.updateFreelancerStatus.bind(bookingSlotsController));
+
+    const taskOfferedController = new TaskOfferedController();
+    app.post('/taskOffereds', authenticateJWT, taskOfferedController.createTaskOffered.bind(taskOfferedController));
+    app.put('/taskOffereds/:id', authenticateJWT, taskOfferedController.updateTaskOffered.bind(taskOfferedController));
+    app.put('/taskOffereds/:id/freelancerStatus', authenticateJWT, taskOfferedController.updateTaskOfferedStatusAsFreelnacer.bind(taskOfferedController)); // New route
+    app.put('/taskOffereds/:id/buyerStatus', authenticateJWT, taskOfferedController.updateTaskOfferedStatusAsBuyer.bind(taskOfferedController)); // New route
+    app.delete('/taskOffereds/:id', authenticateJWT, taskOfferedController.deleteTaskOffered.bind(taskOfferedController));
+    app.get('/taskOffereds', authenticateJWT, taskOfferedController.searchTaskOffered.bind(taskOfferedController));
+    app.get('/taskOffereds/offerUser/:offerUserId', authenticateJWT, taskOfferedController.getTasksByOfferUserId.bind(taskOfferedController));
+    app.get('/taskOffereds/createdUser/:createdUserId', authenticateJWT, taskOfferedController.getTasksByCreatedUserId.bind(taskOfferedController));
+
+    const ratingController = new RatingController();
+    app.post('/ratings', authenticateJWT, ratingController.createRating.bind(ratingController));
+    app.put('/ratings/:id', authenticateJWT, ratingController.updateRating.bind(ratingController));
+    app.delete('/ratings/:id', authenticateJWT, ratingController.deleteRating.bind(ratingController));
+    app.get('/ratings/:id', authenticateJWT, ratingController.getRatingById.bind(ratingController));
+    app.get('/ratings/buyer/:buyerId', authenticateJWT, ratingController.getRatingsByBuyerId.bind(ratingController));
+    app.get('/ratings/freelancer/:freelancerId', authenticateJWT, ratingController.getRatingsByFreelancerId.bind(ratingController));
+    app.get('/ratings', authenticateJWT, ratingController.getAllRatings.bind(ratingController));
+
     // Auth routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));
     app.post('/logout', authenticateJWT, loginInfoController.logout.bind(loginInfoController));
+    app.post('/signup', loginInfoController.signup);
 
     app.post('/analyse', authenticateJWT, analyzeRatings);
 }

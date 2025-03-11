@@ -3,7 +3,7 @@ const UserProfile = require('../models/userProfile');
 class UserProfileController {
     async getUserProfiles(req, res) {
         const userProfiles = await UserProfile.find().populate('profileId').populate('userId');
-        res.status(200).json(userProfiles);
+        res.status(200).json({data: userProfiles});
     }
 
     async getUserProfileById(req, res) {
@@ -15,8 +15,18 @@ class UserProfileController {
         }
     }
 
+    async getUserProfileByUserId(req, res) {
+        const userProfiles = await UserProfile.find({ userId: req.params.userId }).populate('profileId').populate('userId');
+        res.status(200).json({data: userProfiles});
+    }
+
     async createUserProfile(req, res) {
         try {
+            const { profileId, userId } = req.body;
+            const existingUserProfile = await UserProfile.findOne({ profileId, userId });
+            if (existingUserProfile) {
+                return res.status(400).json({ message: 'User already Added this Category !' });
+            }
             const newUserProfile = new UserProfile(req.body);
             await newUserProfile.save();
             res.status(201).json(newUserProfile);
