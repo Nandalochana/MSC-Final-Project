@@ -3,5 +3,6 @@ export enum DashboardComponents {
   TaskSettings = 'taskSettings',
   BookingManagement = 'bookingManagement',
   Reports = 'reports',
-  Logs = 'logs'
+  Logs = 'logs',
+  ProfileManagement = 'profileManagement',
 }

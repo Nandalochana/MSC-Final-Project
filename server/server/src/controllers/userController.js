@@ -19,6 +19,7 @@ const upload = multer({ storage });
 
 class UserController {
     async getUsers(req, res) {
+        console.log('getUsers');
         const users = await User.find();
         res.status(200).json(users);
     }
@@ -38,13 +39,53 @@ class UserController {
     }
 
     async getUserById(req, res) {
+        console.log('getUserById-users');
         const user = await User.findById(req.params.id);
         if (user) {
-            res.status(200).json({data: user});
+            const userWithRating = {
+                ...user.toObject(),
+                rating: Number(await this.calculateUserRating(user._id)) // Calculate rating for each user
+            };
+            
+            res.status(200).json({data: userWithRating});
         } else {
             res.status(404).json({ message: 'User not found' });
         }
     }
+
+
+    
+        async getUserProfileByUserId(req, res) {
+            console.log('getUserById');
+            const userProfiles = await UserProfile.find({ userId: req.params.userId }).populate('profileId').populate('userId');
+            const userProfilesWithRatings = await Promise.all(userProfiles.map(async (profile) => {
+                const rating = Number(await this.calculateUserRating(profile.userId));
+                return {
+                ...profile.toObject(),
+                rating,
+                };
+            }));
+            res.status(200).json({ data: userProfilesWithRatings });
+        }
+    
+        
+            async calculateUserRating(userId) {
+                try {
+                    // Fetch all reviews for the given user
+                    const reviews = await Rating.find({ freelancerId: userId });
+            
+                    if (reviews.length === 0) {
+                        return 0;  
+                    }
+                    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+                    const averageRating = totalRating / reviews.length;
+                    const value=  averageRating.toFixed(2); // Return the average rating rounded to 2 decimal places
+                    return value; // Return the average rating
+                } catch (error) {
+                    console.error(`Error calculating rating for user ${userId}:`, error);
+                    return 0; // Return 0 in case of an error
+                }
+            }
 
     async createUser(req, res) {
         try {

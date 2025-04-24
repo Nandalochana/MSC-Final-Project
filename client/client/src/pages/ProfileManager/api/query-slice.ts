@@ -1,11 +1,13 @@
 import { z } from "zod";
 import { API_ENDPOINT } from "../../../lib/utils/endpoints-constant";
 import { api } from "../../../lib/utils/api";
-import { DeleteProfileResponseSchema, ProfilesSchema, UserProfileAddRequestSchema, UserProfileAddResponseSchema, UserProfilesSchema } from "../components/schema";
+import { DeleteProfileResponseSchema, ProfilesSchema, ProfilesSchemaAll, UserProfileAddRequestSchema, UserProfileAddResponseSchema, UserProfilesSchema } from "../components/schema";
 
 
 const GetAllProfilesRequest = z.void();
 const GetAllProfilesResponse = ProfilesSchema;
+
+const GetAllUserProfilesRequestAll = ProfilesSchemaAll;
 
 const GetAllUserProfilesRequest = z.object({
   userId: z.string(),
@@ -45,6 +47,16 @@ const getAllUserProfiles = api<
   responseSchema: GetAllUserProfilesResponse,
 });
 
+const getAllUsersProfiles = api<
+  z.infer<typeof GetAllProfilesRequest>,
+  z.infer<typeof GetAllUserProfilesRequestAll>
+>({
+  path: API_ENDPOINT.USER_PROFILE,
+  method: "GET",
+  requestSchema: GetAllProfilesRequest,
+  responseSchema: GetAllUserProfilesRequestAll,
+});
+
 
 const addUserProfile = api<
   z.infer<typeof UserProfileAddRequest>,
@@ -72,5 +84,6 @@ export const ProfileAPI = {
   getAllProfiles,
   getAllUserProfiles,
   addUserProfile,
+  getAllUsersProfiles,
   deleteUserProfile
 };

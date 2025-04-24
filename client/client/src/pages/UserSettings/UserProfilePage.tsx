@@ -34,6 +34,7 @@ const UserProfilePage: React.FC = () => {
     address3: Yup.string(),
     mobileNr: Yup.string().min(10, "Mobile Number must be at least 10 digits"),
     telephoneNr: Yup.string(),
+    hourlyRate: Yup.number().typeError("Hourly Rate must be a number").required("Hourly Rate is required (in euros)"),
   });
 
   // Formik setup
@@ -46,6 +47,7 @@ const UserProfilePage: React.FC = () => {
       address3: userDetails?.data?.address3 || "",
       mobileNr: userDetails?.data?.mobileNr || "",
       telephoneNr: userDetails?.data?.telephoneNr || "",
+      hourlyRate: userDetails?.data?.hourlyRate || 0,
     },
     enableReinitialize: true, // Ensure form updates when userDetails changes
     validationSchema,

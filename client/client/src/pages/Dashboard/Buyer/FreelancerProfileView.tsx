@@ -37,7 +37,7 @@ const FreelancerProfileView: React.FC = () => {
     queryKey: ["userProfiles"],
     queryFn: () => ProfileAPI.getAllUserProfiles({ userId: params?.id || "" }),
   });
-
+console.log("User Profiles:", {userDetails, userProfiles});
   if (isLoading || isUserProfilesLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -78,7 +78,7 @@ const FreelancerProfileView: React.FC = () => {
           {/* Profile Card */}
           <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center gap-2">
             <img
-              src={fallbackImage}
+              src={userDetails?.data.profileImg ? userDetails?.data.profileImg : fallbackImage}
               alt={userDetails?.data.firstName}
               className="h-32 w-32 object-cover rounded-full mb-4"
             />
@@ -95,7 +95,7 @@ const FreelancerProfileView: React.FC = () => {
             {/* Rating Component */}
             <ReactStars
               count={5}
-              // value={seller.rating}
+              value={Array.isArray(userProfiles) || !userProfiles?.data ? 0 : userProfiles.data[0]?.rating}
               size={16}
               activeColor="#FF8A00"
               isHalf={true}

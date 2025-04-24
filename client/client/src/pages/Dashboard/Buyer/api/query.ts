@@ -26,6 +26,7 @@ type AddTimeSlotsInput = {
 
 type UpdateBookingInput = {
   bookingId: string;
+  status: string;
 };
 
 export function useFilterUsers(options = {}) {

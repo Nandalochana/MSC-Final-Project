@@ -1,31 +1,36 @@
-// const redis = require('redis');
+const redis = require('redis');
 
-// class RedisClient {
-//     constructor() {
-//         this.client = redis.createClient({
-//             url: process.env.REDIS_URL,
-//             password: process.env.REDIS_PASSWORD
-//         });
+class RedisClient {
+    constructor() {
+        const redisUrl = process.env.REDIS_CONNECTION_STRING; // Corrected variable name
+        if (!redisUrl || (!redisUrl.startsWith('redis://') && !redisUrl.startsWith('rediss://'))) {
+            throw new Error('REDIS_CONNECTION_STRING must start with "redis://" or "rediss://".');
+        }
 
-//         this.client.on('error', (err) => {
-//             console.error('Redis Client Error', err);
-//         });
+        this.client = redis.createClient({
+            url: redisUrl,
+            password: process.env.REDIS_PASSWORD
+        });
 
-//         this.client.connect();
-//     }
+        this.client.on('error', (err) => {
+            console.error('Redis Client Error', err);
+        });
 
-//     async set(key, value) {
-//         await this.client.set(key, JSON.stringify(value));
-//     }
+        this.client.connect();
+    }
 
-//     async get(key) {
-//         const data = await this.client.get(key);
-//         return JSON.parse(data);
-//     }
+    async set(key, value) {
+        await this.client.set(key, JSON.stringify(value));
+    }
 
-//     async del(key) {
-//         await this.client.del(key);
-//     }
-// }
+    async get(key) {
+        const data = await this.client.get(key);
+        return JSON.parse(data);
+    }
 
-// module.exports = new RedisClient();
+    async del(key) {
+        await this.client.del(key);
+    }
+}
+
+module.exports = new RedisClient();

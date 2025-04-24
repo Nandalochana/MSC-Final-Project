@@ -1,25 +1,38 @@
+const { ServiceBusClient } = require('@azure/service-bus');
+const NotificationEntity = require('../models/notificationEntity');
 
-// const { ServiceBusClient } = require("@azure/service-bus");
-// const connectionString = "YOUR_SERVICE_BUS_CONNECTION_STRING";
-// const queueName = "YOUR_QUEUE_NAME";
+class ServiceBusSender {
+    constructor() {
+        this.serviceBusClient = new ServiceBusClient(process.env.SERVICE_BUS_CONNECTION_STRING);
+        this.sender = this.serviceBusClient.createSender(process.env.SERVICE_BUS_QUEUE_NAME);
+    }
 
-// async function sendNotification(notification) {
-//     const sbClient = new ServiceBusClient(connectionString);
-//     const sender = sbClient.createSender(queueName);
+    async sendMessage(userId, content) {     
+        try {
+            const notification = new NotificationEntity({ userId, content });
+            await notification.save();
+            const savedNotification = await NotificationEntity.findById(notification._id);
+            console.log('Saved Notification:', savedNotification);
+            const message = {
+                body: { 
+                    id: savedNotification._id, 
+                    userId: savedNotification.userId, 
+                    content: savedNotification.content 
+                },
+                contentType: 'application/json',
+            };
+            await this.sender.sendMessages(message);
+            console.log('Message sent to Service Bus queue:', message);
+        } 
+        catch (error) {
+            console.error('Error sending message to Service Bus queue:', error);
+        }
+    }
 
-//     try {
-//         const message = {
-//             body: notification,
-//             contentType: "application/json",
-//         };
-//         await sender.sendMessages(message);
-//         console.log(`Sent notification: ${notification.title}`);
-//     } catch (err) {
-//         console.error("Error sending notification:", err);
-//     } finally {
-//         await sender.close();
-//         await sbClient.close();
-//     }
-// }
+    async close() {
+        await this.sender.close();
+        await this.serviceBusClient.close();
+    }
+}
 
-// module.exports = sendNotification;
+module.exports = ServiceBusSender;

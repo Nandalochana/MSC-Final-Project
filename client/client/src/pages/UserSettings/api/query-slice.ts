@@ -26,6 +26,14 @@ export const taskRequestSchema = z.object({
   status: z.string(),
 });
 
+const GetOfferedTasksRequest = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
+
+const GetCreatedTasksRequest = z.object({
+  createdUserId: z.string().min(1, "User ID is required"),
+});
+
 const TaskResponse = TaskResponseSchema;
 
 
@@ -38,6 +46,55 @@ const GetTasksByUserId = z.object({
 });
 
 
+const GetOfferedTasksResponse = z.object({
+  data: z.array(
+    z.object({
+      buyerStatus: z.string(),
+      freelancerStatus: z.string(),
+      _id: z.string(),
+      taskId: z.object({
+        _id: z.string(),
+        createdUserId: z.string(),
+        title: z.string(),
+        description: z.string(),
+        status: z.string(),
+        createdAt: z.string(),
+        updatedAt: z.string(),
+        __v: z.number(),
+      }),
+      offerUserId: z.string(),
+      totalPrice: z.number(),
+      status: z.string(),
+      offerStatus: z.string(),
+      __v: z.number(),
+    })
+  )
+});
+
+const GetCreatedTasksResponse = z.object({
+  data: z.array(
+    z.object({
+      buyerStatus: z.string(),
+      freelancerStatus: z.string(),
+      _id: z.string(),
+      taskId: z.object({
+        _id: z.string(),
+        createdUserId: z.string(),
+        title: z.string(),
+        description: z.string(),
+        status: z.string(),
+        createdAt: z.string(),
+        updatedAt: z.string(),
+        __v: z.number(),
+      }),
+      offerUserId: z.string(),
+      totalPrice: z.number(),
+      status: z.string(),
+      offerStatus: z.string(),
+      __v: z.number(),
+    })
+  )
+});
 
 const getUserDetails = api<
   z.infer<typeof GetUserDetailsRequest>,
@@ -93,11 +150,36 @@ const getUserCreatedTasks = api<
    type: "private"
 });
 
+const getOfferedTasks = api<
+  z.infer<typeof GetOfferedTasksRequest>,
+  z.infer<typeof GetOfferedTasksResponse>
+>({
+  path: ({ userId }) => `${API_ENDPOINT.TASKS_OFFERED}/${userId}`,
+  method: "GET",
+  requestSchema: GetOfferedTasksRequest,
+  responseSchema: GetOfferedTasksResponse,
+});
+
+
+const getCreatedTasks = api<
+  z.infer<typeof GetCreatedTasksRequest>,
+  z.infer<typeof GetCreatedTasksResponse>
+>({
+  path: ({ createdUserId }) => `${API_ENDPOINT.TASKS_CREATED}/${createdUserId}`,
+  method: "GET",
+  requestSchema: GetCreatedTasksRequest,
+  responseSchema: GetCreatedTasksResponse,
+});
+
+
+
 
 export const UserDetailsAPI = {
   getUserDetails,
   updateUserDetails,
   createTask,
   getAllTasks,
-  getUserCreatedTasks
+  getUserCreatedTasks,
+  getOfferedTasks,
+  getCreatedTasks
 };

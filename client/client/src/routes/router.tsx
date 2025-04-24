@@ -18,6 +18,9 @@ import TaskDetailPage from "../pages/TaskDetail/TaskDetailPage";
 import BookingCalendar from "../pages/BookingCalendar/page";
 import PastBookingsPage from "../pages/PastBookings/page";
 import UpcommingBookingsPage from "../pages/UpcomingBookings/page";
+import { TaskOffered } from "../pages/TaskOffered/page";
+import ServicesPage from "../pages/Services/page";
+import AboutPage from "../pages/About/page";
 
 export const router = createBrowserRouter([
   {
@@ -59,6 +62,14 @@ export const router = createBrowserRouter([
           <RoleBasedRoute allowedRole="Freelancer">
             <BookingCalendar />
           </RoleBasedRoute>
+        ),
+      },
+      {
+        path: Routes.TASK_OFFERED,
+        element: (
+          <PrivateRoute>
+            <TaskOffered />
+          </PrivateRoute>
         ),
       },
       {
@@ -139,6 +150,22 @@ export const router = createBrowserRouter([
           <PublicRoute>
             <Login />
           </PublicRoute>
+        ),
+      },
+      {
+        path: Routes.SERVICES,
+        element: (
+          // <PublicRoute>
+            <ServicesPage />
+          // </PublicRoute>
+        ),
+      },
+      {
+        path: Routes.ABOUT,
+        element: (
+          // <PublicRoute>
+            <AboutPage />
+          // </PublicRoute>
         ),
       },
     ],

@@ -6,18 +6,19 @@ import { BuyerAPI } from "../api/query-slice";
 interface ProfileViewProps {
   nameFilter: string;
   selectedCategories: string[];
+  selectedRatings: string[]; // Assuming selectedRatings is an array of numbers
 }
 
-const ProfileView: React.FC<ProfileViewProps> = ({ nameFilter, selectedCategories }) => {
+const ProfileView: React.FC<ProfileViewProps> = ({ nameFilter, selectedCategories, selectedRatings }) => {
   const {
     data: users = { data: [] },
     isLoading: isUsersLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["freelancers", nameFilter, selectedCategories],
+    queryKey: ["freelancers", nameFilter, selectedCategories, selectedRatings],
     queryFn: () =>
-      BuyerAPI.getFreelancers({ name: nameFilter, profiles: selectedCategories }),
+      BuyerAPI.getFreelancers({ name: nameFilter, profiles: selectedCategories, rating: selectedRatings }),
     enabled: true,
   });
 

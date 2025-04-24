@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     address3: { type: String },
     telephoneNr: { type: String, required: true },
     mobileNr: { type: String, required: true },
+    hourlyRate: { type: Number, default: 0 },
     status: { type: String, enum: Object.values(StatusEnum), default: StatusEnum.ACTIVE },
     loginInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'loginInfo' }
 });

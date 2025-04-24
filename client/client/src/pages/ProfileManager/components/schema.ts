@@ -34,7 +34,42 @@ export const SingleUserProfileSchema = z.object({
     status: z.string(),
     __v: z.number(),
   }),
+  rating: z.number(),
 });
+
+
+
+//user profile schema
+export const SingleProfileSchemaAll = z.object({
+  _id: z.string(),
+  profileId: z.object({
+    _id: z.string(),
+    profileName: z.string(),
+    status: z.string(),
+    __v: z.number(),
+  }),
+  userId: z.object({
+    _id: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    profileImg: z.string(),
+    address1: z.string(),
+    address2: z.string(),
+    address3: z.string(),
+    telephoneNr: z.string(),
+    mobileNr: z.string(),
+    status: z.string(),
+    __v: z.number(),
+  })
+});
+
+
+export const ProfilesSchemaAll = z.object({
+  data: z.array(SingleProfileSchemaAll),
+});
+
+
+
 
 export const UserProfilesSchema = z.object({
   data: z.array(SingleUserProfileSchema),

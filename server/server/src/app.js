@@ -6,9 +6,12 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const setRoutes = require('./routes/index');
 const cors = require('cors'); // Import cors
+const { listenToMessages } = require('./utils/serviceBus');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ALLOWED_PORTS = [PORT, 5173]; // Add 5173 to allowed ports
+const SERVER_PORT = 4000;
 
 mongoose.connect('mongodb://localhost:27017/jamkDB', {
     useNewUrlParser: true,
@@ -31,6 +34,20 @@ setRoutes(app);
 
 // Serve Swagger docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173", 
+  }
+});
+
+// Start Service Bus listening
+listenToMessages(io);
+
+httpServer.listen(SERVER_PORT, () => {
+    console.log(`Server running on port ${SERVER_PORT}`);
+  });
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

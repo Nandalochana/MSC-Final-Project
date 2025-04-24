@@ -15,7 +15,7 @@ const LoadAllTasks = api<
   z.infer<typeof RegisterResponse>
 >({
   method: "GET",
-  path: API_ENDPOINT.TASKS,
+  path: API_ENDPOINT.TASK_ALL,
   requestSchema: LoadAllTasksRequest,
   responseSchema: RegisterResponse
 });

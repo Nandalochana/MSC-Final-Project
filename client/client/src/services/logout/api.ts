@@ -6,6 +6,7 @@ import { api } from "../../lib/utils/api";
 import { API_ENDPOINT } from "../../lib/utils/endpoints-constant";
 // import { useUserStore } from "../../store/user-store";
 import { LogoutAPIRequestSchema, LogoutAPIResponseSchema } from "./schema";
+import { useNotificationStore } from "../../store/notification-store";
 // import { Routes } from "../../lib/utils/routes-constants";
 
 const LogoutRequest = LogoutAPIRequestSchema;

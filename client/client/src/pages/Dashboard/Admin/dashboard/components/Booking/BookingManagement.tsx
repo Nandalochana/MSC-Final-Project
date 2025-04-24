@@ -1,44 +1,49 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { TaskManagementAPI } from "../Task/api/query-slice";
-
-
+import { useQuery } from "@tanstack/react-query";
+import { BookingManagementAPI } from "./api/query-slice";
+import BookingTable from "./BookingTable";
+import "./BookingSlot.css"; 
 
 const BookingManagement: React.FC = () => {
+  const { data = { data: [] }, isLoading, isError, error } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: () => BookingManagementAPI.LoadAllBookings(),
+  });
 
-    const { data = { data: [] }, isError, isLoading, error } = useQuery({
-        queryKey: ["booking"],
-        queryFn: () => TaskManagementAPI.LoadAllTasks(),
-    });
+  const bookings = data.data.map((booking: any) => ({
+    id: booking._id,
+    userId: booking.userId.firstName + " " + booking.userId.lastName,
+    date: booking.date,
+    timeSlot: booking.timeSlot,
+    buyerId: booking.buyerId.firstName + " " + booking.buyerId.lastName,
+    status: booking.status,
+    hourlyRate: booking.hourlyRate,
+    totalPrice: booking.totalPrice,
+    taskInfo: booking.taskInfo,
+    description: booking.description,
+    contactInfo: booking.contactInfo,
+    location: booking.location,
+    buyerStatus: booking.buyerStatus,
+    freelancerStatus: booking.freelancerStatus,
+    ...booking,
+  }));
 
-    const bookings = data.data.map((booking: any) => ({
-        id: booking._id,
-        title: booking.title,
-        description: booking.description,
-        status: booking.status,
-        createdUserId: {
-            id: booking.createdUserId._id,
-            firstName: booking.createdUserId.firstName,
-            lastName: booking.createdUserId.lastName,
-        },
-        ...booking
-    }));
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
-    else if (isError) {
-        return <div>Error loading bookings: {error.message}</div>
-    }
+  if (isError) {
+    return <div>Error loading bookings: {error.message}</div>;
+  }
 
-    return (
-
-        <div>
-            <h1>Booking Management</h1>
-            <p> Booking Managamement infor is Here</p>
-            
+  return (
+      <div className="book-management-container">
+          <h2 className="book-management-title">Book-Slot Management</h2>
+          <div className="book-table-wrapper">
+            <BookingTable bookings={bookings} />
+          </div>
         </div>
-    )
+  );
 };
 
 export default BookingManagement;

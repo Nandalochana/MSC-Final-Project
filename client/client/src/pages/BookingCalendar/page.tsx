@@ -3,8 +3,8 @@ import {
   Calendar as AntCalendar,
   Modal,
   Button as AntButton,
-  Badge,
   Select,
+  Popover,
 } from "antd";
 import { format } from "date-fns";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,10 +14,16 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useAddTimeSlots } from "./api/query";
 import { useUserStore } from "../../store/user-store";
-import { FreelancerAPI } from "./api/query-slice";
 import { TimeSlotPicker } from "./components/TimeSlotPicker";
+import { BuyerAPI } from "../Dashboard/Buyer/api/query-slice";
 
 type ViewMode = "month" | "year";
+
+type TimeSlot = {
+  _id: string;
+  start: string;
+  end: string;
+};
 
 const BookingCalendar = () => {
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -35,60 +41,94 @@ const BookingCalendar = () => {
   const { user } = useUserStore();
 
   // Simulated query - replace with actual API call
-  const { data: availabilityData = [] as Array<{ date: string; available: boolean; timeSlots: { _id: string; start: string; end: string; }[]; status: string; userId: string; _id: string; }> } = useQuery({
-    queryKey: ["timeSlots"],
-    queryFn: () => FreelancerAPI.getTimeSlots(),
-  });
+  // const { data: availabilityData = [] } = useQuery({
+  //   queryKey: ["timeSlots"],
+  //   queryFn: () => FreelancerAPI.getTimeSlots(),
+  // });
+
+
+    // Fetch user details
+    const {
+      data: availabilityData = [],
+      // isLoading,
+      // isError,
+      // error,
+    } = useQuery({
+      queryKey: ["timeSlots", user?.user._id],
+      enabled: !!user?.user._id,
+      queryFn: () =>
+        BuyerAPI.getFreelancerTimeSlots({
+          freelancerId: user?.user._id as string,
+        }),
+    });
 
   const addTimeSlot = useAddTimeSlots();
 
   const handleDateSelect = (date: Dayjs) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+
+    // Find all time slots for the selected date
+    const data = Array.isArray(availabilityData)
+      ? availabilityData
+      : availabilityData.data;
+    const existingData = data?.find(
+      (d) => dayjs(d.date).format("YYYY-MM-DD") === formattedDate
+    );
+
     // Prevent selecting past dates
     if (date.isBefore(dayjs(), "day")) {
       message.error("Cannot select past dates");
       return;
     }
 
-    const formattedDate = date.format("YYYY-MM-DD");
+    // Always open the modal for adding new time slots
     setSelectedDate(date.toDate());
+    setAvailability(existingData?.available ? "available" : "unavailable");
+    setSelectedTimeSlots([]); // Start with an empty array of time slots
+    setIsModalOpen(true); // Open the modal
+  };
 
-    const data = Array.isArray(availabilityData) ? availabilityData : availabilityData.data;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSlotClick = (slot: TimeSlot, date: Dayjs, dateData: any) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+
+    // Find all time slots for the selected date
+    const data = Array.isArray(availabilityData)
+      ? availabilityData
+      : availabilityData.data;
     const existingData = data?.find(
-      (d: { date: string | number | Date; }) => format(new Date(d.date), "yyyy-MM-dd") === formattedDate
-    ) as { date: string; available: boolean; timeSlots: { _id: string; start: string; end: string; }[]; status: string; userId: string; _id: string; };
+      (d) => dayjs(d.date).format("YYYY-MM-DD") === formattedDate
+    );
 
-    if (existingData) {
-      setAvailability(existingData.available ? "available" : "unavailable");
-      setSelectedTimeSlots(
-        existingData.timeSlots.map((slot: { _id: string; start: string; end: string; }) => ({
-          _id: existingData._id,
-          start: slot.start,
-          end: slot.end,
-        }))
-      );
-    } else {
-      setAvailability("available");
-      setSelectedTimeSlots([]);
-    }
-
+    setSelectedDate(date.toDate());
+    setSelectedTimeSlots([
+      {
+        _id: dateData._id,
+        start: slot.start,
+        end: slot.end,
+      },
+    ]);
+    setAvailability(existingData?.available ? "available" : "unavailable");
     setIsModalOpen(true);
+    // if (existingData) {
+    // }
   };
 
   const handleAvailabilitySubmit = async (
     timeSlots: { start: string; end: string }[]
   ) => {
     if (!selectedDate) return;
-  
+
     if (!user?.user._id) {
       console.error("User ID is undefined");
       return;
     }
-  
+
     if (timeSlots.length === 0) {
       message.error("Please add at least one time slot.");
       return;
     }
-  
+
     const data = {
       userId: user.user._id,
       date: format(selectedDate, "yyyy-MM-dd"),
@@ -96,15 +136,15 @@ const BookingCalendar = () => {
       status: "active",
       timeSlots: timeSlots,
     };
-  
+
     try {
       await addTimeSlot.mutateAsync(data);
       message.success("Availability updated successfully!");
-  
+
       // Close the modal immediately after submission
       setIsModalOpen(false);
       setSelectedTimeSlots([]);
-  
+
       // Refetch the availability data to update the calendar
       queryClient.invalidateQueries({ queryKey: ["timeSlots"] });
     } catch (error) {
@@ -112,82 +152,86 @@ const BookingCalendar = () => {
       message.error("Failed to update availability.");
     }
   };
-  
 
   const dateCellRender = (date: Dayjs) => {
     const formattedDate = date.format("YYYY-MM-DD");
-    
-    const data = Array.isArray(availabilityData) ? availabilityData : availabilityData.data;
-  
-    // Ensure date is valid before accessing it
-    const dateData = data.find((d: { date: string | number | Date; }) => {
-      const parsedDate = dayjs(d.date);
-      
-      if (!parsedDate.isValid()) {
-        console.warn("Invalid date found in availability data:", d.date);
-        return false; // Skip invalid date entries
-      }
-  
-      return parsedDate.format("YYYY-MM-DD") === formattedDate;
-    });
-  
-    // Disable past dates
-    const isPastDate = date.isBefore(dayjs(), "day");
-  
-    if (dateData || isPastDate) {
+
+    const data = Array.isArray(availabilityData)
+      ? availabilityData
+      : availabilityData.data;
+    const dateData = data.filter(
+      (d) => dayjs(d.date).format("YYYY-MM-DD") === formattedDate
+    );
+
+    if (!dateData.length || date.isBefore(dayjs(), "day")) return null;
+
+    const renderSlots = () => {
+      const slots = dateData.flatMap((d) =>
+        (d.timeSlots || []).map((slot) => ({
+          ...slot,
+          available: d.available,
+          dateData: d,
+        }))
+      ); // Attach dateData to each slot
+
+      const visibleSlots = slots.slice(0, 3); // Show up to 3 slots initially
+      const hiddenCount = slots.length - visibleSlots.length;
+
+      console.log("visibleSlots", visibleSlots);
+
       return (
-        <div className="absolute bottom-2 left-2">
-          <div
-            className={`p-2 rounded-md ${
-              isPastDate
-                ? ""
-                : dateData?.available
-                ? "bg-green-100"
-                : "bg-red-100"
-            }`}
-          >
-            <Badge
-              status={
-                isPastDate
-                  ? "default"
-                  : dateData?.available
-                  ? "success"
-                  : "error"
-              }
-              text={
-                <div className="text-xs">
-                  {isPastDate ? (
-                    <></>
-                  ) : (
-                    <>
-                      <div>
-                        {dateData?.available ? "Available" : "Unavailable"}
-                      </div>
-                      {dateData?.available &&
-                        dateData?.timeSlots?.map((slot, index) => (
-                          <div key={index} className="text-gray-600">
-                            {slot.start} - {slot.end}
-                          </div>
-                        ))}
-                      {!dateData?.available &&
-                        dateData?.timeSlots?.map((slot, index) => (
-                          <div key={index} className="text-gray-600">
-                            {slot.start} - {slot.end}
-                          </div>
-                        ))}
-                    </>
-                  )}
+        <div className="flex flex-col gap-1">
+          {visibleSlots.map((slot, i) => (
+            <div
+              key={i}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSlotClick(slot, date, slot.dateData); // Pass slot.dateData
+              }}
+              className={`text-xs text-white px-2 py-1 rounded cursor-pointer hover:bg-green-200 hover:text-black ${
+                slot.available ? "bg-green-500" : "bg-red-500"
+              }`}
+            >
+              {slot.start} - {slot.end}
+            </div>
+          ))}
+          {hiddenCount > 0 && (
+            <Popover
+              content={
+                <div className="space-y-1 z-50">
+                  {slots.map((slot, i) => (
+                    <div
+                      key={i}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSlotClick(slot, date, slot.dateData); // Pass slot.dateData
+                      }}
+                      className={`text-xs text-white px-2 py-1 rounded cursor-pointer hover:bg-green-200 hover:text-black ${
+                        slot.available ? "bg-green-500" : "bg-red-500"
+                      }`}
+                    >
+                      {slot.start} - {slot.end}
+                    </div>
+                  ))}
                 </div>
               }
-            />
-          </div>
+              title={dayjs(date).format("MMMM D, YYYY")}
+              trigger="click"
+            >
+              <div
+                className="text-xs text-gray-500 hover:underline cursor-pointer"
+                onClick={(e) => e.stopPropagation()} // Prevent event propagation
+              >
+                +{hiddenCount} more
+              </div>
+            </Popover>
+          )}
         </div>
       );
-    }
-  
-    return null;
+    };
+
+    return <div className="px-1 py-1">{renderSlots()}</div>;
   };
-  
 
   const handlePrevMonth = () => {
     setCurrentDate(currentDate.subtract(1, viewMode));
@@ -199,10 +243,6 @@ const BookingCalendar = () => {
 
   const handleToday = () => {
     setCurrentDate(dayjs());
-  };
-
-  const handleAvailabilityChange = (value: "available" | "unavailable") => {
-    setAvailability(value);
   };
 
   return (
@@ -271,7 +311,7 @@ const BookingCalendar = () => {
               <div>
                 <Select
                   value={availability}
-                  onChange={handleAvailabilityChange}
+                  onChange={(value) => setAvailability(value)}
                   className="w-full"
                   options={[
                     { label: "Available", value: "available" },
@@ -284,7 +324,6 @@ const BookingCalendar = () => {
                 onSubmit={handleAvailabilitySubmit}
                 initialTimeSlots={selectedTimeSlots}
               />
-              
             </div>
           </Modal>
         </div>

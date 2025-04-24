@@ -45,6 +45,12 @@
  *     description: Task offered management
  *   - name: Ratings
  *     description: API for managing ratings
+ *   - name: Locations
+ *     description: Location management
+ *   - name: Notifications
+ *     description: Notification management
+ *   - name: Redis
+ *     description: Redis cache management
  */
 
 /**
@@ -2245,7 +2251,6 @@
  *                 requiredLevel:
  *                   type: string
  *                 status:
- *                   type: string
  */
 
 /**
@@ -4690,4 +4695,349 @@
  *         description: Bad request
  *       404:
  *         description: Tasks not found
+ */
+
+/**
+ * @swagger
+ * /locations:
+ *   post:
+ *     summary: Insert or update a location
+ *     tags: [Locations]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - status
+ *               - latitude
+ *               - longitude
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: ID of the user
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE]
+ *                 description: Status of the location
+ *               latitude:
+ *                 type: number
+ *                 description: Latitude of the location
+ *               longitude:
+ *                 type: number
+ *                 description: Longitude of the location
+ *     responses:
+ *       200:
+ *         description: Location inserted or updated successfully
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /locations/{userId}:
+ *   delete:
+ *     summary: Delete a location by user ID
+ *     tags: [Locations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID of the location to delete
+ *     responses:
+ *       200:
+ *         description: Location deleted successfully
+ *       404:
+ *         description: Location not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /locations:
+ *   get:
+ *     summary: Search locations by query parameters
+ *     tags: [Locations]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         description: Filter by user ID
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [ACTIVE, INACTIVE]
+ *         description: Filter by status
+ *     responses:
+ *       200:
+ *         description: List of locations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Location'
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /notifications:
+ *   post:
+ *     summary: Create a new notification
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: ID of the user
+ *               message:
+ *                 type: string
+ *                 description: Notification message
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE]
+ *                 description: Status of the notification
+ *     responses:
+ *       201:
+ *         description: Notification created successfully
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /notifications/{id}:
+ *   put:
+ *     summary: Update a notification by ID
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Notification ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 description: Updated notification message
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, INACTIVE]
+ *                 description: Updated status of the notification
+ *     responses:
+ *       200:
+ *         description: Notification updated successfully
+ *       404:
+ *         description: Notification not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /notifications/{id}:
+ *   delete:
+ *     summary: Delete a notification by ID
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification deleted successfully
+ *       404:
+ *         description: Notification not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /notifications/user/{userId}:
+ *   get:
+ *     summary: Retrieve notifications by user ID
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of notifications
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   message:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *       404:
+ *         description: Notifications not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /notifications/{id}/user/{userId}:
+ *   put:
+ *     summary: Update notification status and mark as read
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Notification ID
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Notification updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                 read:
+ *                   type: boolean
+ *       404:
+ *         description: Notification not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /redis/cache:
+ *   get:
+ *     summary: Retrieve all keys and values from Redis cache
+ *     tags: [Redis]
+ *     responses:
+ *       200:
+ *         description: List of all keys and their values
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: string
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /redis/cache/{key}:
+ *   get:
+ *     summary: Retrieve a specific key from Redis cache
+ *     tags: [Redis]
+ *     parameters:
+ *       - in: path
+ *         name: key
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The Redis key to retrieve
+ *     responses:
+ *       200:
+ *         description: The value of the specified key
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 key:
+ *                   type: string
+ *                 data:
+ *                   type: string
+ *       404:
+ *         description: Key not found in cache
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /redis/cache/{key}:
+ *   delete:
+ *     summary: Delete a specific key from Redis cache
+ *     tags: [Redis]
+ *     parameters:
+ *       - in: path
+ *         name: key
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The Redis key to delete
+ *     responses:
+ *       200:
+ *         description: Key deleted successfully
+ *       500:
+ *         description: Internal server error
  */

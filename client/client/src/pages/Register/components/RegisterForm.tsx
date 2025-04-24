@@ -6,10 +6,12 @@ import { Button } from "../../../components/button/button";
 import { RegisterFormSchema, RegisterFormType } from "./schema";
 import { useSignUp } from "../api/query";
 import { FaShoppingCart, FaUserTie } from "react-icons/fa";
+import { uploadImageToAzureBlob } from "../../../utils/azureBlob";
 
 export const RegisterForm: FC = () => {
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState<string>("Freelancer");
+  const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
   const methods = useForm<RegisterFormType>({
     resolver: zodResolver(RegisterFormSchema),
@@ -22,25 +24,29 @@ export const RegisterForm: FC = () => {
     trigger,
     formState: { errors },
     setError,
+    setValue,
   } = methods;
 
   const signUp = useSignUp();
 
   const onSubmit: SubmitHandler<RegisterFormType> = async (data) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      console.log("Submitting form", data); // Debugging statement
       const { confirmPassword, ...submitData } = data;
-      await signUp.mutateAsync({ ...submitData, role: selectedRole });
+      console.log("Submit data", submitData); // Additional debugging statement
+      await signUp.mutateAsync({ ...submitData, role: selectedRole, profileImg: profileImageUrl });
+      console.log("Form submitted successfully"); // Additional debugging statement
     } catch (error: unknown) {
+      console.error("Error submitting form", error); // Additional debugging statement
       if (error instanceof Error) {
         setError("root", {
           type: "manual",
-          message: error.message, // Display the error message in the form
+          message: error.message,
         });
       } else {
         setError("root", {
           type: "manual",
-          message: "An unexpected error occurred", // Fallback for unexpected error types
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -61,6 +67,22 @@ export const RegisterForm: FC = () => {
   };
 
   const handleBack = () => setStep((prev) => prev - 1);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      try {
+        const url = await uploadImageToAzureBlob(file);
+        setProfileImageUrl(url);
+        setValue("profileImg", url); // Set the uploaded image URL to the profileImg input field
+      } catch (error) {
+        setError("profileImg", {
+          type: "manual",
+          message: "Failed to upload image",
+        });
+      }
+    }
+  };
 
   return (
     <FormProvider {...methods}>
@@ -106,12 +128,19 @@ export const RegisterForm: FC = () => {
               errors={errors}
             />
             <Input
-              type="text"
+              type="hidden" // Make the input hidden
               label="Profile Image URL"
               placeholder="Profile Image URL"
               name="profileImg"
               errors={errors}
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <input type="file" onChange={handleImageUpload} />
+              {errors.profileImg && (
+                <p className="text-red-500 text-sm">{errors.profileImg.message}</p>
+              )}
+            </div>
             <Button
               type="button"
               onClick={() =>

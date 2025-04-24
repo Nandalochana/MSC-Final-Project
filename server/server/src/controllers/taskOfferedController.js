@@ -63,7 +63,7 @@ class TaskOfferedController {
             taskOffered.status = status;
             taskOffered.freelancerStatus = BookingSlotsStatus.CONFIRMED;
             await taskOffered.save();
-            res.status(200).json(taskOffered);
+            res.status(200).json({ data: taskOffered });
         } catch (error) {
             res.status(500).json({ message: 'Internal server error' });
         }
@@ -81,7 +81,7 @@ class TaskOfferedController {
             taskOffered.status = status;
             taskOffered.buyerStatus = BookingSlotsStatus.CONFIRMED;
             await taskOffered.save();
-            res.status(200).json(taskOffered);
+            res.status(200).json({ data: taskOffered});
         } catch (error) {
             res.status(500).json({ message: 'Internal server error' });
         }
@@ -128,7 +128,8 @@ class TaskOfferedController {
         try {
             const { createdUserId } = req.params;
             const tasks = await Task.find({ createdUserId }).populate('createdUserId');
-            res.status(200).json({ data: tasks });
+            const taskOffereds = await TaskOffered.find({ taskId: { $in: tasks.map(task => task._id) } }).populate('taskId');
+            res.status(200).json({ data: taskOffereds });
         } catch (error) {
             res.status(500).json({ message: 'Internal server error' });
         }

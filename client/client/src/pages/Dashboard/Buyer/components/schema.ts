@@ -21,9 +21,12 @@ export const SingleFreelanceResponseSchema = z.object({
   address3: z.string(),
   telephoneNr: z.string(),
   mobileNr: z.string(),
+  rating: z.number(),
+  latitude: z.number(),
+  longitude: z.number(),
+  score: z.number(),
   status: z.string(),
   __v: z.number(),
-
 });
 
 

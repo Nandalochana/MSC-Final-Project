@@ -9,6 +9,7 @@ import { DeleteTimeResponseSchema, TimesResSchema } from "../../../BookingCalend
 const GetFilteredFreelancersRequest = z.object({
   name: z.string().optional(),
   profiles: z.array(z.string()).optional(),
+  rating: z.array(z.string()).optional(),
 });
 
 const GetFilteredFreelancersResponse = FreelanceResSchema;
@@ -25,35 +26,15 @@ const BookingRequest = z.object({
   startTime: z.string(),
   endTime: z.string(),
   hourlyRate: z.number(),
-  totalPrice: z.number()
+  totalPrice: z.number(),
+  taskInfo: z.string(),
+  description: z.string(),
+  contactInfo: z.string(),
+  location: z.string(),
 });
 
 export const BookingResponse = z.object({
   data: z.object({
-    userId: z.string(),
-    date: z.string(),
-    timeSlot: z.object({
-      start: z.string(),
-      end: z.string(),
-      _id: z.string()
-    }),
-    buyerId: z.string(),
-    status: z.string(),
-    hourlyRate: z.number(),
-    totalPrice: z.number(),
-    buyerStatus: z.string(),
-    freelancerStatus: z.string(),
-    _id: z.string(),
-    __v: z.number()
-  }),
-});
-
-const GetBuyerTimeRequest = z.object({
-  buyerId: z.string().min(1, "ID is required"),
-});
-
-const GetBuyerTimeResponse = z.object({
-  data: z.array(z.object({
     _id: z.string(),
     __v: z.number(),
     userId: z.string(),
@@ -67,8 +48,43 @@ const GetBuyerTimeResponse = z.object({
     hourlyRate: z.number(),
     totalPrice: z.number(),
     status: z.string(),
+    taskInfo: z.string(),
+    description: z.string(),
+    contactInfo: z.string(),
+    location: z.string(),
+    buyerStatus: z.string(),
+    freelancerStatus: z.string()
+  }),
+});
+
+
+const GetBuyerTimeRequest = z.object({
+  buyerId: z.string().min(1, "ID is required"),
+});
+
+const GetBuyerTimeResponse = z.object({
+  data: z.array(z.object({
+    _id: z.string(),
+    userId: z.string(),
+    date: z.string(),
+    timeSlot: z.object({
+      start: z.string(),
+      end: z.string(),
+      _id: z.string()
+    }),
+    buyerId: z.string(),
+    status: z.string(),
+    hourlyRate: z.number(),
+    totalPrice: z.number(),
+    taskInfo: z.string(),
+    description: z.string(),
+    contactInfo: z.string(),
+    location: z.string(),
+    buyerStatus: z.string(),
+    freelancerStatus: z.string()
   }))
 });
+
 
 export const BookingUpdateSchema = z.object({
   bookingId: z.string().min(1, "Task ID is required"),

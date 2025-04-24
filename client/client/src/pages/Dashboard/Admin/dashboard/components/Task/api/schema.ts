@@ -12,7 +12,6 @@ export const TaskUpdateResponseSchema = z.object({
     title: z.string(),
     description: z.string(),
     status: z.string(),
-    createdDate: z.string(),
     createdAt: z.string(),
     updatedAt: z.string(),
     __v: z.number(),
@@ -34,7 +33,6 @@ export const TaskInfoResponseSchema = z.object({
       title: z.string(),
       description: z.string(),
       status: z.string(),
-      createdDate: z.string(),
       createdAt: z.string(),
       updatedAt: z.string(),
       __v: z.number(),
@@ -50,6 +48,7 @@ export const TaskInfoResponseSchema = z.object({
         mobileNr: z.string().optional(),
         status: z.string(),
         __v: z.number(),
+        hourlyRate: z.number(),
       }),
     })
   ),

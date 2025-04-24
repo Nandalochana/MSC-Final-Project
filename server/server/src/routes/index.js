@@ -20,6 +20,9 @@ const EmployerHistoryController = require('../controllers/employerHistoryControl
 const BookingSlotsController = require('../controllers/bookingSlotsController');
 const TaskOfferedController = require('../controllers/taskOfferedController');
 const RatingController = require('../controllers/ratingController');
+const LocationController = require('../controllers/locationController');
+const NotificationController = require('../controllers/notificationController');
+const RedisController = require('../controllers/redisController');
 
 function setRoutes(app) {
     const roleController = new RoleController();
@@ -62,6 +65,8 @@ function setRoutes(app) {
 
     const profileController = new ProfileController();
     app.get('/profiles', authenticateJWT, profileController.getProfiles.bind(profileController));
+    app.get('/profiles/all', authenticateJWT, profileController.getProfilesAllStatus.bind(profileController));
+    app.put('/profiles/toggleStatus/:id', authenticateJWT, profileController.toggleProfileStatus.bind(profileController));
     app.get('/profiles/:id', authenticateJWT, profileController.getProfileById.bind(profileController));
     app.post('/profiles', authenticateJWT, profileController.createProfile.bind(profileController));
     app.put('/profiles/:id', authenticateJWT, profileController.updateProfile.bind(profileController));
@@ -77,6 +82,7 @@ function setRoutes(app) {
 
     const taskController = new TaskController();
     app.get('/tasks', authenticateJWT, taskController.getTasks.bind(taskController));
+    app.get('/tasks/all', authenticateJWT, taskController.getTasksAllStatus.bind(taskController)); // New route
     app.get('/tasks/userId', authenticateJWT, taskController.getTaskByUserId.bind(taskController));
     app.get('/tasks/:id', authenticateJWT, taskController.getTaskById.bind(taskController));
     app.post('/tasks', authenticateJWT, taskController.createTask.bind(taskController));
@@ -159,6 +165,8 @@ function setRoutes(app) {
     app.post('/bookingSlots/buyer/past', authenticateJWT, bookingSlotsController.getBookingSlotsByBuyerIdPast.bind(bookingSlotsController)); // Updated route
     app.post('/bookingSlots/buyer/future', authenticateJWT, bookingSlotsController.getBookingSlotsByBuyerIdFuture.bind(bookingSlotsController)); // Updated route
     app.get('/bookingSlots', authenticateJWT, bookingSlotsController.getAllBookingSlots.bind(bookingSlotsController));
+    app.get('/bookingSlotsWithUser', authenticateJWT, bookingSlotsController.getAllBookingSlotsWithUserInfo.bind(bookingSlotsController));
+    app.put('/bookingSlots/toggleStatus/:id', authenticateJWT, bookingSlotsController.toggleBookingStatus.bind(bookingSlotsController));
     app.put('/bookingSlots/:id/buyerStatus', authenticateJWT, bookingSlotsController.updateBuyerStatus.bind(bookingSlotsController));
     app.put('/bookingSlots/:id/freelancerStatus', authenticateJWT, bookingSlotsController.updateFreelancerStatus.bind(bookingSlotsController));
 
@@ -180,6 +188,23 @@ function setRoutes(app) {
     app.get('/ratings/buyer/:buyerId', authenticateJWT, ratingController.getRatingsByBuyerId.bind(ratingController));
     app.get('/ratings/freelancer/:freelancerId', authenticateJWT, ratingController.getRatingsByFreelancerId.bind(ratingController));
     app.get('/ratings', authenticateJWT, ratingController.getAllRatings.bind(ratingController));
+
+    const locationController = new LocationController();
+    app.post('/locations', authenticateJWT, locationController.upsertLocation.bind(locationController));
+    app.delete('/locations/:userId', authenticateJWT, locationController.deleteLocation.bind(locationController));
+    app.get('/locations', authenticateJWT, locationController.searchLocations.bind(locationController));
+
+    const notificationController = new NotificationController();
+    app.post('/notifications', authenticateJWT, notificationController.insertNotification.bind(notificationController));
+    app.put('/notifications/:id', authenticateJWT, notificationController.updateNotification.bind(notificationController));
+    app.put('/notifications/:id/user/:userId', authenticateJWT, notificationController.updateNotificationStatus.bind(notificationController));
+    app.delete('/notifications/:id', authenticateJWT, notificationController.deleteNotification.bind(notificationController));
+    app.get('/notifications/user/:userId', authenticateJWT, notificationController.searchByUserId.bind(notificationController));
+
+    // Redis routes
+    app.get('/redis/cache/:key', authenticateJWT,RedisController.getCacheByKey.bind(RedisController));
+    app.delete('/redis/cache/:key', authenticateJWT,RedisController.deleteCacheByKey.bind(RedisController));
+    app.get('/redis/cache', authenticateJWT,RedisController.getAllCache.bind(RedisController));
 
     // Auth routes
     app.post('/login', loginInfoController.login.bind(loginInfoController));

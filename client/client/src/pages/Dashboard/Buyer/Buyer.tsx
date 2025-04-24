@@ -7,11 +7,15 @@ export const Buyer: FC = () => {
   const [activeTab, setActiveTab] = useState<"map" | "profile">("profile");
   const [nameFilter, setNameFilter] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedRatings, setSelectedRatings] = useState<string[]>([]); // State for selected ratings
 
   // Function to apply filters
-  const handleApplyFilter = (name: string, categories: string[]) => {
+  const handleApplyFilter = (name: string, categories: string[], rating: string[]) => {
     setNameFilter(name);
     setSelectedCategories(categories);
+    // Handle ratings if needed
+    setSelectedRatings(rating); 
+
   };
 
   return (
@@ -52,10 +56,9 @@ export const Buyer: FC = () => {
           {/* Content */}
           <div className="">
             {activeTab === "profile" ? (
-              <ProfileView nameFilter={nameFilter} selectedCategories={selectedCategories} />
+              <ProfileView nameFilter={nameFilter} selectedCategories={selectedCategories} selectedRatings={selectedRatings} />
             ) : (
-              <MapView />
-              // <MapView nameFilter={nameFilter} selectedCategories={selectedCategories} />
+              <MapView nameFilter={nameFilter} selectedCategories={selectedCategories} selectedRatings={selectedRatings} />
             )}
           </div>
         </div>

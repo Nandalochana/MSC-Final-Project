@@ -200,7 +200,7 @@ const TaskDetailPage: React.FC = () => {
                       )}
                   </>
                 ) : (
-                  <p className="text-gray-700">
+                  <p className="text-gray-700 break-all">
                     {formik.values[field as keyof typeof formik.values]}
                   </p>
                 )}
@@ -303,7 +303,7 @@ const TaskDetailPage: React.FC = () => {
           </div>
 
           {/* Add New Comment */}
-          {!isTaskCreator && <div className="mt-4 flex gap-2">
+          {!isTaskCreator && taskDetails?.data.status !== 'offered' && <div className="mt-4 flex gap-2">
             <input
               type="text"
               value={commentDescription}

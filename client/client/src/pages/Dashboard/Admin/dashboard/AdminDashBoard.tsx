@@ -7,6 +7,8 @@ import UserManagement from './components/UserManagement/UserManagement';
 import { DashboardComponents } from './DashboardComponents';
 import TaskManagement from './components/Task/TaskManagement';
 import BookingManagement from './components/Booking/BookingManagement';
+import Logs from './components/Logs/Logs';
+import ProfileManagement from './components/Profile/ProfileManagement';
 
 const { SubMenu } = Menu;
 
@@ -31,7 +33,10 @@ const AdminDashboard: React.FC = () => {
         setSelectedComponent(<BookingManagement />);
         break;
       case DashboardComponents.Logs:
-        // setSelectedComponent(<Logs />);
+         setSelectedComponent(<Logs />);
+        break;
+        case DashboardComponents.ProfileManagement:
+         setSelectedComponent(<ProfileManagement />);
         break;
       default:
         setSelectedComponent(<UserManagement />);
@@ -57,7 +62,11 @@ const AdminDashboard: React.FC = () => {
           <Menu.Item key={DashboardComponents.BookingManagement} style={{ fontSize: '16px', padding: '10px 20px' }}>Booking Management</Menu.Item>
         </SubMenu>
 
-        <SubMenu key="sub4" title="Reports">
+        <SubMenu key="sub4" title="Profile Management">
+          <Menu.Item key={DashboardComponents.ProfileManagement} style={{ fontSize: '16px', padding: '10px 20px' }}>Profile Management</Menu.Item>
+        </SubMenu>
+
+        <SubMenu key="sub5" title="Reports">
           <Menu.Item key={DashboardComponents.Reports} style={{ fontSize: '16px', padding: '10px 20px' }}>View Reports</Menu.Item>
           <Menu.Item key={DashboardComponents.Logs} style={{ fontSize: '16px', padding: '10px 20px' }}>Logs</Menu.Item>
         </SubMenu>

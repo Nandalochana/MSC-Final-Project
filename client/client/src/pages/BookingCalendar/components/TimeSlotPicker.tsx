@@ -19,35 +19,44 @@ interface TimeSlotSelectorProps {
 export const TimeSlotPicker = ({ onSubmit, initialTimeSlots = [] }: TimeSlotSelectorProps) => {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>(initialTimeSlots);
 
-  const deleteTimeSlot = useDeleteTimeSlot(); 
+  console.log('timeSlots', timeSlots);
+
+  const deleteTimeSlot = useDeleteTimeSlot();
 
   useEffect(() => {
-    if (initialTimeSlots.length > 0) {
-      setTimeSlots(initialTimeSlots);
-    } else {
-      setTimeSlots([]);
-    }
+    // Initialize with provided time slots or reset to empty
+    setTimeSlots(initialTimeSlots);
   }, [initialTimeSlots]);
 
   const addTimeSlot = () => {
+    // Add a new empty time slot
     setTimeSlots([...timeSlots, { start: "", end: "" }]);
   };
 
   const removeTimeSlot = (index: number) => {
     const slotToDelete = timeSlots[index];
     if (slotToDelete._id) {
-      deleteTimeSlot.mutate(slotToDelete._id);
+      // Call API to delete the time slot if it has an `_id`
+      deleteTimeSlot.mutate(slotToDelete._id, {
+        onSuccess: () => {
+          message.success("Time slot deleted successfully");
+        },
+        onError: () => {
+          message.error("Failed to delete time slot");
+        },
+      });
     }
+    // Remove the time slot from the local state
     setTimeSlots(timeSlots.filter((_, i) => i !== index));
-    message.success("Time slot deleted successfully");
   };
 
   const updateTimeSlot = (index: number, field: keyof TimeSlot, value: Dayjs | null) => {
+    // Update the `start` or `end` time of a specific time slot
     const updatedSlots = timeSlots.map((slot, i) => {
       if (i === index) {
-        return { 
-          ...slot, 
-          [field]: value ? value.format("HH:mm") : "" 
+        return {
+          ...slot,
+          [field]: value ? value.format("HH:mm") : "",
         };
       }
       return slot;
@@ -56,19 +65,17 @@ export const TimeSlotPicker = ({ onSubmit, initialTimeSlots = [] }: TimeSlotSele
   };
 
   const isValid = () => {
-    return timeSlots.length > 0 && timeSlots.every(slot => slot.start && slot.end);
+    // Ensure all time slots have valid `start` and `end` times
+    return timeSlots.every((slot) => slot.start && slot.end && slot.start < slot.end);
   };
 
   const handleSubmit = () => {
     if (!isValid()) {
-      message.error("Please add at least one valid time slot before saving.");
+      message.error("Please ensure all time slots have valid start and end times.");
       return;
     }
-
     onSubmit(timeSlots);
   };
-
-  console.log('timeSlots', timeSlots);
 
   return (
     <div className="space-y-4">
@@ -80,6 +87,7 @@ export const TimeSlotPicker = ({ onSubmit, initialTimeSlots = [] }: TimeSlotSele
               value={slot.start ? dayjs(slot.start, "HH:mm") : null}
               onChange={(value) => updateTimeSlot(index, "start", value)}
               className="w-full"
+              placeholder="Start Time"
             />
             <span className="text-gray-500">to</span>
             <TimePicker
@@ -87,6 +95,7 @@ export const TimeSlotPicker = ({ onSubmit, initialTimeSlots = [] }: TimeSlotSele
               value={slot.end ? dayjs(slot.end, "HH:mm") : null}
               onChange={(value) => updateTimeSlot(index, "end", value)}
               className="w-full"
+              placeholder="End Time"
             />
             <Button
               type="text"

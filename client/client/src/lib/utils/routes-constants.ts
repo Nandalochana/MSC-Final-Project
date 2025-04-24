@@ -14,5 +14,8 @@ export const Routes = {
   CALENDAR: "/calendar",
   COMPLTED_BOOKINGS: "/bookings/completed",
   UPCOMING_BOOKINGS: "/bookings/upcoming",
+  TASK_OFFERED: "/task/offered",
+  SERVICES: "/services",
+  ABOUT: "/about-us",
 
 };

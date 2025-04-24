@@ -42,6 +42,7 @@ def main():
         distance = calculate_distance(base_lat, base_lon, rating['latitude'], rating['longitude'])
         score = float(predictions[i][0])  # Convert float32 to float
         results.append({
+            'userId': rating['userId'],  # Include userId in the result
             'latitude': rating['latitude'],
             'longitude': rating['longitude'],
             'rating': rating['rating'],

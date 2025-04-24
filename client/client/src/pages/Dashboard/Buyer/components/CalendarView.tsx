@@ -32,20 +32,18 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [viewMode, setViewMode] = useState<ViewMode>("month");
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<
-    Array<{ _id: string; start: string; end: string }>
+    Array<{ _id: string; start: string; end: string; contactInfo: string; description: string; location:string; taskInfo:string;}>
   >([]);
   const [existingBooking, setExistingBooking] = useState<
-    Array<{ _id: string; start: string; end: string }>
+    Array<{ _id: string; start: string; end: string; contactInfo: string; description: string; location:string; taskInfo:string;}>
   >([]);
 
   const { user } = useUserStore();
-
   const bookingTimes = useBookingTimeSlots();
   const queryClient = useQueryClient();
   const updateBooking = useUpdateBooking();
-   const deleteBooking = useDeleteBooking(); 
+  const deleteBooking = useDeleteBooking(); 
 
-  // Fetch user details
   const {
     data: timeDetails,
     isLoading,
@@ -60,7 +58,6 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
       }),
   });
 
-  // Fetch booking details
   const {
     data: bookingDetails,
     isLoading: bookingLoading,
@@ -153,6 +150,10 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
             _id: d._id,
             start: slot.start,
             end: slot.end,
+            contactInfo: d.contactInfo,
+            description: d.description,
+            location: d.location,
+            taskInfo: d.taskInfo,
           }))
         );
 
@@ -163,6 +164,10 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
             _id: booking._id,
             start: booking.timeSlot.start,
             end: booking.timeSlot.end,
+            contactInfo: booking.contactInfo,
+            description: booking.description,
+            location: booking.location,
+            taskInfo: booking.taskInfo,
           })) || []
         );
         setIsModalOpen(true);
@@ -175,7 +180,7 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
   };
 
   const handleBooking = async (
-    timeSlots: { _id: string; start: string; end: string }[]
+    timeSlots: { _id: string; start: string; end: string; contactInfo: string; description: string, location:string; taskInfo:string;}[]
   ) => {
     if (!selectedDate || timeSlots.length === 0) return;
 
@@ -185,6 +190,7 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
     const endTime = dayjs(
       `${format(selectedDate, "yyyy-MM-dd")} ${timeSlots[0].end}`
     ).toISOString();
+    console.log('timeSlots', timeSlots);
 
     const data = {
       freelancerSlotId: timeSlots[0]._id,
@@ -194,6 +200,10 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
       endTime,
       hourlyRate: 0,
       totalPrice: 0,
+      contactInfo: timeSlots[0].contactInfo,
+      description: timeSlots[0].description,
+      location: timeSlots[0].location,
+      taskInfo: timeSlots[0].taskInfo,
     };
 
     await bookingTimes.mutateAsync(data);
@@ -211,12 +221,6 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
     timeSlots: { start: string; end: string }[]
   ) => {
     if (!selectedDate || timeSlots.length === 0) return;
-
-    console.log("bookingId", bookingId);
-    console.log("first time slot", dayjs(timeSlots[0].start).toISOString());
-    console.log("second time slot", timeSlots[0].end);
-
-    console.log('existingBooking', existingBooking);
 
     const startTime = dayjs(timeSlots[0].start).toISOString();
     const endTime = dayjs(timeSlots[0].end).toISOString();
@@ -431,17 +435,8 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             footer={null}
+            className="!w-full !max-w-4xl mx-auto"
           >
-            <div className="space-y-4">
-              <h3 className="font-medium text-gray-700">
-                Available Time Slots
-              </h3>
-              <TimeSlotSelector
-                onSubmit={handleBooking}
-                initialTimeSlots={selectedTimeSlots}
-                existingBookings={existingBooking}
-                isBookingMode={true}
-              />
               {existingBooking.length > 0 && (
                 <div>
                   <h3 className="font-medium text-gray-700">
@@ -449,8 +444,8 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
                   </h3>
                   {existingBooking.map((booking) => (
                     <div key={booking._id} className="p-2 border my-4 rounded-md">
-                      <div className="space-y-3 py-2">
-                        <div className="flex items-center gap-2 group">
+                      <div className="space-y-3 py-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2 group w-2/3">
                         <TimePicker
                             format="HH:mm"
                             value={booking.start ? dayjs(booking.start) : null}
@@ -475,7 +470,7 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
                         </div>
                         <AntButton
                           type="primary"
-                          className="w-full"
+                          className="w-1/4 h-10 !mt-0"
                           onClick={() =>
                             handleUpdateBooking(booking._id, [
                               { start: booking.start, end: booking.end },
@@ -489,6 +484,17 @@ const CalendarView = ({ userDetails }: { userDetails: UserDetails }) => {
                   ))}
                 </div>
               )}
+            <div className="space-y-4">
+              <h3 className="font-medium text-gray-700">
+                Available Time Slots
+              </h3>
+              <TimeSlotSelector
+                onSubmit={handleBooking}
+                initialTimeSlots={selectedTimeSlots}
+                existingBookings={existingBooking}
+                isBookingMode={true}
+                setIsModalOpen={setIsModalOpen}
+              />
             </div>
           </Modal>
         </div>

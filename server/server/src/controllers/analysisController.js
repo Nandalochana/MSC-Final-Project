@@ -3,7 +3,6 @@ const path = require('path');
 
 const analyzeRatings = (req, res) => {
     const { ratings } = req.body;
-
     const scriptPath = path.resolve(__dirname, '../../../neural-network/src/predict.py');
     const pythonProcess = spawn('python', [scriptPath, JSON.stringify(ratings)]);
 

@@ -1,9 +1,15 @@
-const Profile = require('../models/profile');
+ const Profile = require('../models/profile');
 
 class ProfileController {
     async getProfiles(req, res) {
+        const profiles = await Profile.find({ status: 'active' });
+        res.status(200).json({ data: profiles });
+    }
+
+    async getProfilesAllStatus(req, res) {
         const profiles = await Profile.find();
-        res.status(200).json({data: profiles});
+        console.log("profiles: ", { data: profiles });
+        res.status(200).json({ data: profiles });
     }
 
     async getProfileById(req, res) {
@@ -40,6 +46,22 @@ class ProfileController {
             res.status(200).json({ message: 'Profile deleted' });
         } else {
             res.status(404).json({ message: 'Profile not found' });
+        }
+    }
+
+    async toggleProfileStatus(req, res) {
+        try {
+            const profile = await Profile.findById(req.params.id);
+            if (profile) {
+                profile.status = profile.status === 'active' ? 'disable' : 'active';
+                await profile.save();
+                console.log("profile: ", { data: profile });
+                res.status(200).json({ data: profile });
+            } else {
+                res.status(404).json({ message: 'Profile not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
 }

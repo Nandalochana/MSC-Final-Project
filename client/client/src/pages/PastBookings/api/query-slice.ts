@@ -24,6 +24,12 @@ export const PastBookingResSchema = z.object({
       status: z.string(),
       hourlyRate: z.number(),
       totalPrice: z.number(),
+      taskInfo: z.string(),
+      description: z.string(),
+      contactInfo: z.string(),
+      location: z.string(),
+      buyerStatus: z.string(),
+      freelancerStatus: z.string(),
     })
   ),
 });

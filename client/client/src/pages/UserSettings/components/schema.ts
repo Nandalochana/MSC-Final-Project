@@ -10,10 +10,13 @@ export const UserDetailsResponseSchema = z.object({
     address2: z.string().optional(),
     address3: z.string().optional(),
     telephoneNr: z.string().optional(),
+    hourlyRate: z.number().optional(),
     mobileNr: z.string().optional(),
+    rating:z.number(),
     status: z.string(),
     __v: z.number(),
-  })
+  }),
+
 
 });
 
@@ -41,6 +44,7 @@ export const SingleTaskResponseSchema = z.object({
     address1: z.string().optional(),
     address2: z.string().optional(),
     address3: z.string().optional(),
+    hourlyRate: z.number().optional(),
     telephoneNr: z.string().optional(),
     mobileNr: z.string().optional(),
     status: z.string(),
